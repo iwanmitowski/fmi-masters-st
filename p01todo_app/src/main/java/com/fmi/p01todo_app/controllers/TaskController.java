@@ -70,7 +70,7 @@ public class TaskController {
     }
 
     @DeleteMapping("/tasks/{id}")
-    public ResponseEntity<Task> updateTask(
+    public ResponseEntity<Task> deleteTask(
             @PathVariable int id) {
         var result = this.taskService.getTask(id);
         if (result == null) {
