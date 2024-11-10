@@ -33,28 +33,67 @@ public class CustomerController {
                 .build();
         }
 
-        return ResponseUtil.respond("message", "Customer created successfully", 201);
+        return AppResponse.success()
+            .withMessage("Customer created successfully")
+            .withCode(HttpStatus.CREATED)
+            .build();
     }
 
     @GetMapping("/customers")
     public ResponseEntity<?> getAll() {
         var result = (ArrayList<Customer>)this.service.getAllCustomers();
-        return ResponseUtil.respond("data", result, 200);
+        return AppResponse.success()
+            .withMessage("Successful")
+            .withData(result)
+            .build();
     }
 
     @GetMapping("/customers/{id}")
     public ResponseEntity<?> getById(@PathVariable int id) {
         var result = this.service.getById(id);
         if (result == null) {
-            return ResponseUtil.respond("message", "entity", 404);
+            return AppResponse.error()
+                .withMessage("Problem during obtaining customer")
+                .withCode(HttpStatus.BAD_REQUEST)
+                .build();
         }
-        return ResponseUtil.respond("data", result, 200);
+
+        return AppResponse.success()
+            .withMessage("Successful")
+            .withData(new Customer[] { result })
+            .build();
+    }
+
+    @PutMapping("/customers")
+    public ResponseEntity<?> update(@RequestBody Customer customer) {
+        var result = this.service.update(customer);
+        if (result == null) {
+            return AppResponse.error()
+                .withMessage("Problem during update")
+                .withCode(HttpStatus.BAD_REQUEST)
+                .build();
+        }
+
+        return AppResponse.success()
+            .withMessage("Successful")
+            .withData(new Customer[] { result })
+            .build();
     }
 
     @DeleteMapping("/customers/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) {
-        this.service.delete(id);
+        var result = this.service.delete(id);
 
-        return ResponseUtil.respond("message", "successful", 200);
+        if (!result) {
+            return AppResponse.error()
+                .withMessage("Problem during delete")
+                .withCode(HttpStatus.BAD_REQUEST)
+                .build();
+        }
+
+        return AppResponse.success()
+            .withMessage("Successful")
+            .build();
+//        return ResponseUtil.respond("message", "successful", 200);
     }
 }

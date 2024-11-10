@@ -1,6 +1,7 @@
 package com.example.p02solar_park_api.solar_park_api.services;
 
 import com.example.p02solar_park_api.solar_park_api.entities.Customer;
+import com.example.p02solar_park_api.solar_park_api.mappers.CustomerRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
@@ -30,10 +31,10 @@ public class CustomerService {
     }
 
     public List<Customer> getAllCustomers() {
-        var query = "SELECT * FROM Customers";
+        var query = "SELECT * FROM Customers WHERE is_active = true";
         return this.db.query(query, (rs, rowNum) -> {
             try {
-                return mapEntity(rs, rowNum);
+                return new CustomerRowMapper().mapRow(rs, rowNum);
             } catch (Exception e) {
                 return null;
             }
@@ -43,27 +44,32 @@ public class CustomerService {
     public Customer getById(int id) {
         var query = "SELECT * FROM Customers WHERE id = ?";
 
-        List<Customer> customers = (List<Customer>) this.db.query(query, new Object[]{id}, (rs, rowNum) -> {
+        var customers = this.db.query(query, new Object[]{id}, (rs, rowNum) -> {
             try {
-                return mapEntity(rs, rowNum);
+                return new CustomerRowMapper().mapRow(rs, rowNum);
             } catch (Exception e) {
                 return null;
             }
-        }).get(0);
+        });
 
         return customers.isEmpty() ? null : customers.get(0);
     }
 
-    public void delete(int id) {
-        var query = "UPDATE Customers SET is_active = false WHERE id = ?";
-        this.db.update(query, id);
+    public Customer update(Customer customer) {
+        var updateQuery = "UPDATE Customers SET name = ?, number_of_projects = ? WHERE is_active = true AND id = ?";
+        int rows = this.db.update(updateQuery, customer.getName(), customer.getNumberOfProjects(), customer.getId());
+
+        if (rows == 0) {
+            return null;
+        }
+
+        return this.getById(customer.getId());
     }
 
-    private Customer mapEntity(ResultSet rs, int rowNum) throws SQLException {
-        Customer customer = new Customer();
-        customer.setId(rs.getInt("id"));
-        customer.setName(rs.getString("name"));
-        customer.setNumberOfProjects(rs.getInt("number_of_projects"));
-        return customer;
+    public boolean delete(int id) {
+        var query = "UPDATE Customers SET is_active = false WHERE id = ?";
+        int rows = this.db.update(query, id);
+
+        return rows > 0;
     }
 }

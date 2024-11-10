@@ -40,6 +40,6 @@ public class AppResponse {
     }
 
     public ResponseEntity<?> build() {
-        return new ResponseEntity<>(response, HttpStatus.valueOf((int)response.get("code"));
+        return new ResponseEntity<>(response, HttpStatus.valueOf((int)response.get("code")));
     }
 }
