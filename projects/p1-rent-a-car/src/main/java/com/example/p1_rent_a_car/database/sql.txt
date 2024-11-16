@@ -32,7 +32,8 @@ CREATE TABLE cars (
     model VARCHAR(50) NOT NULL,
     manufactured_year INT NOT NULL,
     availability BOOLEAN NOT NULL DEFAULT TRUE,
-    price_per_day DECIMAL(10,2) NOT NULL
+    price_per_day DECIMAL(10,2) NOT NULL,
+    is_deleted BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 INSERT INTO cars (make, model, manufactured_year, availability, price_per_day)
@@ -71,6 +72,7 @@ CREATE TABLE offers (
     rental_id INT NOT NULL,
     status_id INT NOT NULL,
     offer_date DATE NOT NULL,
+    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY (rental_id) REFERENCES rentals(id),
     FOREIGN KEY (status_id) REFERENCES status(id)
 );
