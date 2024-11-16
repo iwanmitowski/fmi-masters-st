@@ -1,0 +1,356 @@
+2024-11-16 21:53:41.640040+02:00 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "CREATE TABLE cars (\000d\000a    id INT AUTO_INCREMENT PRIMARY KEY,\000d\000a    make VARCHAR(50) NOT NULL,\000d\000a    model VARCHAR(50) NOT NULL,\000d\000a    [*]year INT NOT NULL,\000d\000a    availability BOOLEAN NOT NULL DEFAULT TRUE,\000d\000a    price_per_day DECIMAL(10,2) NOT NULL\000d\000a)"; expected "identifier"; SQL statement:
+CREATE TABLE cars (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    make VARCHAR(50) NOT NULL,
+    model VARCHAR(50) NOT NULL,
+    year INT NOT NULL,
+    availability BOOLEAN NOT NULL DEFAULT TRUE,
+    price_per_day DECIMAL(10,2) NOT NULL
+) [42001-224]
+2024-11-16 21:53:41.648056+02:00 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CARS" not found; SQL statement:
+INSERT INTO cars (make, model, year, availability, price_per_day)
+VALUES
+    ('Toyota', 'Corolla', 2020, TRUE, 45.00),
+    ('VW', 'Golf', 2019, TRUE, 40.00),
+    ('BMW', 'X5', 2021, TRUE, 90.00),
+    ('Ford', 'Fiesta', 2018, TRUE, 35.00),
+    ('Audi', 'A4', 2021, TRUE, 85.00) [42102-224]
+2024-11-16 21:53:41.660611+02:00 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "RENTALS" not found; SQL statement:
+CREATE TABLE offers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    rental_id INT NOT NULL,
+    status_id INT NOT NULL,
+    offer_date DATE NOT NULL,
+    FOREIGN KEY (rental_id) REFERENCES rentals(id),
+    FOREIGN KEY (status_id) REFERENCES status(id)
+) [42102-224]
+2024-11-16 21:53:41.672612+02:00 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CARS" not found; SQL statement:
+-- TODO: Pending offer to be created along with rental
+CREATE TABLE rentals (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    client_id INT NOT NULL,
+    car_id INT NOT NULL,
+    rental_start_date DATE NOT NULL,
+    rental_end_date DATE NOT NULL,
+    total_price DECIMAL(10,2) NOT NULL,
+    offer_id INT,
+    FOREIGN KEY (client_id) REFERENCES clients(id),
+    FOREIGN KEY (car_id) REFERENCES cars(i [42102-224]
+2024-11-16 21:53:54.097900+02:00 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "DROP [*]CITIES"; expected "TABLE, INDEX, USER, SEQUENCE, CONSTANT, TRIGGER, MATERIALIZED, VIEW, ROLE, ALIAS, SCHEMA, ALL OBJECTS, DOMAIN, TYPE, AGGREGATE, SYNONYM"; SQL statement:
+DROP CITIES [42001-224]
+2024-11-16 21:54:39.744822+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CLIENTS" not found; SQL statement:
+CREATE TABLE rentals (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    client_id INT NOT NULL,
+    car_id INT NOT NULL,
+    rental_start_date DATE NOT NULL,
+    rental_end_date DATE NOT NULL,
+    total_price DECIMAL(10,2) NOT NULL,
+    offer_id INT,
+    FOREIGN KEY (client_id) REFERENCES clients(id),
+    FOREIGN KEY (car_id) REFERENCES cars(id),
+    FOREIGN KEY (offer_id) REFERENCES offers(id)
+) [42102-224]
+2024-11-16 21:55:01.542065+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]REATE TABLE cities (\000d\000a    id INT AUTO_INCREMENT PRIMARY KEY,\000d\000a    name VARCHAR(100) NOT NULL\000d\000a)"; expected "ROLLBACK, REVOKE, RUNSCRIPT, RELEASE, REFRESH"; SQL statement:
+REATE TABLE cities (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+) [42001-224]
+2024-11-16 21:55:01.543064+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CITIES" not found (this database is empty); SQL statement:
+INSERT INTO cities (name) VALUES
+('Пловдив'),
+('София'),
+('Варна'),
+('Бургас') [42104-224]
+2024-11-16 21:55:18.665984+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]REATE TABLE cities (\000d\000a    id INT AUTO_INCREMENT PRIMARY KEY,\000d\000a    name VARCHAR(100) NOT NULL\000d\000a)"; expected "ROLLBACK, REVOKE, RUNSCRIPT, RELEASE, REFRESH"; SQL statement:
+REATE TABLE cities (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+) [42001-224]
+2024-11-16 21:55:18.665984+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CITIES" not found (this database is empty); SQL statement:
+INSERT INTO cities (name) VALUES
+('Пловдив'),
+('София'),
+('Варна'),
+('Бургас') [42104-224]
+2024-11-16 21:55:38.678213+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]REATE TABLE CITIES(\000d\000a    id INT AUTO_INCREMENT PRIMARY KEY,\000d\000a    name VARCHAR(100) NOT NULL\000d\000a)"; expected "ROLLBACK, REVOKE, RUNSCRIPT, RELEASE, REFRESH"; SQL statement:
+REATE TABLE CITIES(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+) [42001-224]
+2024-11-16 21:55:38.679214+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CITIES" not found (this database is empty); SQL statement:
+INSERT INTO CITIES (name) VALUES
+('Пловдив'),
+('София'),
+('Варна'),
+('Бургас') [42104-224]
+2024-11-16 21:55:38.680214+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "CREATE TABLE cars (\000d\000a    id INT AUTO_INCREMENT PRIMARY KEY,\000d\000a    make VARCHAR(50) NOT NULL,\000d\000a    model VARCHAR(50) NOT NULL,\000d\000a    [*]year INT NOT NULL,\000d\000a    availability BOOLEAN NOT NULL DEFAULT TRUE,\000d\000a    price_per_day DECIMAL(10,2) NOT NULL\000d\000a)"; expected "identifier"; SQL statement:
+CREATE TABLE cars (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    make VARCHAR(50) NOT NULL,
+    model VARCHAR(50) NOT NULL,
+    year INT NOT NULL,
+    availability BOOLEAN NOT NULL DEFAULT TRUE,
+    price_per_day DECIMAL(10,2) NOT NULL
+) [42001-224]
+2024-11-16 21:55:38.681214+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CARS" not found; SQL statement:
+INSERT INTO cars (make, model, year, availability, price_per_day)
+VALUES
+    ('Toyota', 'Corolla', 2020, TRUE, 45.00),
+    ('VW', 'Golf', 2019, TRUE, 40.00),
+    ('BMW', 'X5', 2021, TRUE, 90.00),
+    ('Ford', 'Fiesta', 2018, TRUE, 35.00),
+    ('Audi', 'A4', 2021, TRUE, 85.00) [42102-224]
+2024-11-16 21:55:38.682213+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "RENTALS" not found; SQL statement:
+CREATE TABLE offers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    rental_id INT NOT NULL,
+    status_id INT NOT NULL,
+    offer_date DATE NOT NULL,
+    FOREIGN KEY (rental_id) REFERENCES rentals(id),
+    FOREIGN KEY (status_id) REFERENCES status(id)
+) [42102-224]
+2024-11-16 21:55:38.684214+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CARS" not found; SQL statement:
+CREATE TABLE rentals (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    client_id INT NOT NULL,
+    car_id INT NOT NULL,
+    rental_start_date DATE NOT NULL,
+    rental_end_date DATE NOT NULL,
+    total_price DECIMAL(10,2) NOT NULL,
+    offer_id INT,
+    FOREIGN KEY (client_id) REFERENCES clients(id),
+    FOREIGN KEY (car_id) REFERENCES cars(id),
+    FOREIGN KEY (offer_id) REFERENCES offers(id)
+) [42102-224]
+2024-11-16 21:55:39.288830+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]REATE TABLE CITIES(\000d\000a    id INT AUTO_INCREMENT PRIMARY KEY,\000d\000a    name VARCHAR(100) NOT NULL\000d\000a)"; expected "ROLLBACK, REVOKE, RUNSCRIPT, RELEASE, REFRESH"; SQL statement:
+REATE TABLE CITIES(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+) [42001-224]
+2024-11-16 21:55:39.289829+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CITIES" not found; SQL statement:
+INSERT INTO CITIES (name) VALUES
+('Пловдив'),
+('София'),
+('Варна'),
+('Бургас') [42102-224]
+2024-11-16 21:55:39.290829+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CLIENTS" already exists; SQL statement:
+CREATE TABLE clients (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    phone VARCHAR(20) NOT NULL UNIQUE,
+    age INT NOT NULL,
+    accident_history BOOLEAN NOT NULL
+) [42101-224]
+2024-11-16 21:55:39.292944+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "CREATE TABLE cars (\000d\000a    id INT AUTO_INCREMENT PRIMARY KEY,\000d\000a    make VARCHAR(50) NOT NULL,\000d\000a    model VARCHAR(50) NOT NULL,\000d\000a    [*]year INT NOT NULL,\000d\000a    availability BOOLEAN NOT NULL DEFAULT TRUE,\000d\000a    price_per_day DECIMAL(10,2) NOT NULL\000d\000a)"; expected "identifier"; SQL statement:
+CREATE TABLE cars (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    make VARCHAR(50) NOT NULL,
+    model VARCHAR(50) NOT NULL,
+    year INT NOT NULL,
+    availability BOOLEAN NOT NULL DEFAULT TRUE,
+    price_per_day DECIMAL(10,2) NOT NULL
+) [42001-224]
+2024-11-16 21:55:39.292944+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CARS" not found; SQL statement:
+INSERT INTO cars (make, model, year, availability, price_per_day)
+VALUES
+    ('Toyota', 'Corolla', 2020, TRUE, 45.00),
+    ('VW', 'Golf', 2019, TRUE, 40.00),
+    ('BMW', 'X5', 2021, TRUE, 90.00),
+    ('Ford', 'Fiesta', 2018, TRUE, 35.00),
+    ('Audi', 'A4', 2021, TRUE, 85.00) [42102-224]
+2024-11-16 21:55:39.292944+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "STATUS" already exists; SQL statement:
+CREATE TABLE status (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    status_name VARCHAR(20) NOT NULL UNIQUE
+) [42101-224]
+2024-11-16 21:55:39.294944+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "RENTALS" not found; SQL statement:
+CREATE TABLE offers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    rental_id INT NOT NULL,
+    status_id INT NOT NULL,
+    offer_date DATE NOT NULL,
+    FOREIGN KEY (rental_id) REFERENCES rentals(id),
+    FOREIGN KEY (status_id) REFERENCES status(id)
+) [42102-224]
+2024-11-16 21:55:39.295942+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CARS" not found; SQL statement:
+CREATE TABLE rentals (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    client_id INT NOT NULL,
+    car_id INT NOT NULL,
+    rental_start_date DATE NOT NULL,
+    rental_end_date DATE NOT NULL,
+    total_price DECIMAL(10,2) NOT NULL,
+    offer_id INT,
+    FOREIGN KEY (client_id) REFERENCES clients(id),
+    FOREIGN KEY (car_id) REFERENCES cars(id),
+    FOREIGN KEY (offer_id) REFERENCES offers(id)
+) [42102-224]
+2024-11-16 21:56:01.856206+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CITIES" not found; SQL statement:
+select * from cities [42102-224]
+2024-11-16 21:56:07.339158+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CITIES" not found; SQL statement:
+select * from CITIES [42102-224]
+2024-11-16 21:56:07.749688+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CITIES" not found; SQL statement:
+select * from CITIES [42102-224]
+2024-11-16 21:56:07.922426+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CITIES" not found; SQL statement:
+select * from CITIES [42102-224]
+2024-11-16 21:56:08.087437+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CITIES" not found; SQL statement:
+select * from CITIES [42102-224]
+2024-11-16 21:56:08.238249+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CITIES" not found; SQL statement:
+select * from CITIES [42102-224]
+2024-11-16 21:56:08.405364+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CITIES" not found; SQL statement:
+select * from CITIES [42102-224]
+2024-11-16 21:56:08.561898+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CITIES" not found; SQL statement:
+select * from CITIES [42102-224]
+2024-11-16 21:56:08.713295+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CITIES" not found; SQL statement:
+select * from CITIES [42102-224]
+2024-11-16 21:56:08.906178+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CITIES" not found; SQL statement:
+select * from CITIES [42102-224]
+2024-11-16 21:56:09.095702+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CITIES" not found; SQL statement:
+select * from CITIES [42102-224]
+2024-11-16 21:57:21.887503+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "([*]'Пловдив'),\000d\000a('София'),\000d\000a('Варна'),\000d\000a('Бургас')"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Пловдив'),
+('София'),
+('Варна'),
+('Бургас') [42001-224]
+2024-11-16 21:57:21.887503+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CLIENTS" already exists; SQL statement:
+CREATE TABLE clients (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    phone VARCHAR(20) NOT NULL UNIQUE,
+    age INT NOT NULL,
+    accident_history BOOLEAN NOT NULL
+) [42101-224]
+2024-11-16 21:57:21.888345+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "CREATE TABLE cars (\000d\000a    id INT AUTO_INCREMENT PRIMARY KEY,\000d\000a    make VARCHAR(50) NOT NULL,\000d\000a    model VARCHAR(50) NOT NULL,\000d\000a    [*]year INT NOT NULL,\000d\000a    availability BOOLEAN NOT NULL DEFAULT TRUE,\000d\000a    price_per_day DECIMAL(10,2) NOT NULL\000d\000a)"; expected "identifier"; SQL statement:
+CREATE TABLE cars (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    make VARCHAR(50) NOT NULL,
+    model VARCHAR(50) NOT NULL,
+    year INT NOT NULL,
+    availability BOOLEAN NOT NULL DEFAULT TRUE,
+    price_per_day DECIMAL(10,2) NOT NULL
+) [42001-224]
+2024-11-16 21:57:28.400908+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "CREATE TABLE cars (\000d\000a    id INT AUTO_INCREMENT PRIMARY KEY,\000d\000a    make VARCHAR(50) NOT NULL,\000d\000a    model VARCHAR(50) NOT NULL,\000d\000a    [*]year INT NOT NULL,\000d\000a    availability BOOLEAN NOT NULL DEFAULT TRUE,\000d\000a    price_per_day DECIMAL(10,2) NOT NULL\000d\000a)"; expected "identifier"; SQL statement:
+CREATE TABLE cars (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    make VARCHAR(50) NOT NULL,
+    model VARCHAR(50) NOT NULL,
+    year INT NOT NULL,
+    availability BOOLEAN NOT NULL DEFAULT TRUE,
+    price_per_day DECIMAL(10,2) NOT NULL
+) [42001-224]
+2024-11-16 21:58:00.786987+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "CREATE TABLE cars (\000d\000a    id INT AUTO_INCREMENT PRIMARY KEY,\000d\000a    make VARCHAR(50) NOT NULL,\000d\000a    model VARCHAR(50) NOT NULL,\000d\000a    [*]year INT NOT NULL,\000d\000a    availability BOOLEAN NOT NULL DEFAULT TRUE,\000d\000a    price_per_day DECIMAL(10,2) NOT NULL\000d\000a)"; expected "identifier"; SQL statement:
+CREATE TABLE cars (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    make VARCHAR(50) NOT NULL,
+    model VARCHAR(50) NOT NULL,
+    year INT NOT NULL,
+    availability BOOLEAN NOT NULL DEFAULT TRUE,
+    price_per_day DECIMAL(10,2) NOT NULL
+) [42001-224]
+2024-11-16 21:58:35.898053+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "CREATE TABLE cars (\000d\000a    id INT AUTO_INCREMENT PRIMARY KEY,\000d\000a    make VARCHAR(50) NOT NULL,\000d\000a    model VARCHAR(50) NOT NULL,\000d\000a    [*]year INT NOT NULL,\000d\000a    availability BOOLEAN DEFAULT TRUE,\000d\000a    price_per_day DECIMAL(10,2) NOT NULL\000d\000a)"; expected "identifier"; SQL statement:
+CREATE TABLE cars (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    make VARCHAR(50) NOT NULL,
+    model VARCHAR(50) NOT NULL,
+    year INT NOT NULL,
+    availability BOOLEAN DEFAULT TRUE,
+    price_per_day DECIMAL(10,2) NOT NULL
+) [42001-224]
+2024-11-16 21:58:37.616960+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "CREATE TABLE cars (\000d\000a    id INT AUTO_INCREMENT PRIMARY KEY,\000d\000a    make VARCHAR(50) NOT NULL,\000d\000a    model VARCHAR(50) NOT NULL,\000d\000a    [*]year INT NOT NULL,\000d\000a    availability BOOLEAN DEFAULT TRUE,\000d\000a    price_per_day DECIMAL(10,2) NOT NULL\000d\000a)"; expected "identifier"; SQL statement:
+CREATE TABLE cars (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    make VARCHAR(50) NOT NULL,
+    model VARCHAR(50) NOT NULL,
+    year INT NOT NULL,
+    availability BOOLEAN DEFAULT TRUE,
+    price_per_day DECIMAL(10,2) NOT NULL
+) [42001-224]
+2024-11-16 21:58:38.126621+02:00 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "CREATE TABLE cars (\000d\000a    id INT AUTO_INCREMENT PRIMARY KEY,\000d\000a    make VARCHAR(50) NOT NULL,\000d\000a    model VARCHAR(50) NOT NULL,\000d\000a    [*]year INT NOT NULL,\000d\000a    availability BOOLEAN DEFAULT TRUE,\000d\000a    price_per_day DECIMAL(10,2) NOT NULL\000d\000a)"; expected "identifier"; SQL statement:
+CREATE TABLE cars (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    make VARCHAR(50) NOT NULL,
+    model VARCHAR(50) NOT NULL,
+    year INT NOT NULL,
+    availability BOOLEAN DEFAULT TRUE,
+    price_per_day DECIMAL(10,2) NOT NULL
+) [42001-224]
+2024-11-16 21:59:29.453193+02:00 jdbc[26]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "CREATE TABLE cars (\000d\000a    id INT AUTO_INCREMENT PRIMARY KEY,\000d\000a    make VARCHAR(50) NOT NULL,\000d\000a    model VARCHAR(50) NOT NULL,\000d\000a    [*]year INT NOT NULL,\000d\000a    availability BOOLEAN NOT NULL DEFAULT TRUE,\000d\000a    price_per_day DECIMAL(10,2) NOT NULL\000d\000a)"; expected "identifier"; SQL statement:
+CREATE TABLE cars (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    make VARCHAR(50) NOT NULL,
+    model VARCHAR(50) NOT NULL,
+    year INT NOT NULL,
+    availability BOOLEAN NOT NULL DEFAULT TRUE,
+    price_per_day DECIMAL(10,2) NOT NULL
+) [42001-224]
+2024-11-16 22:00:39.368812+02:00 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "RENTALS" not found; SQL statement:
+CREATE TABLE offers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    rental_id INT NOT NULL,
+    status_id INT NOT NULL,
+    offer_date DATE NOT NULL,
+    FOREIGN KEY (rental_id) REFERENCES rentals(id),
+    FOREIGN KEY (status_id) REFERENCES status(id)
+) [42102-224]
+2024-11-16 22:00:56.752880+02:00 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "OFFERS" not found; SQL statement:
+CREATE TABLE rentals (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    client_id INT NOT NULL,
+    car_id INT NOT NULL,
+    rental_start_date DATE NOT NULL,
+    rental_end_date DATE NOT NULL,
+    total_price DECIMAL(10,2) NOT NULL,
+    offer_id INT,
+    FOREIGN KEY (client_id) REFERENCES clients(id),
+    FOREIGN KEY (car_id) REFERENCES cars(id),
+    FOREIGN KEY (offer_id) REFERENCES offers(id)
+) [42102-224]
