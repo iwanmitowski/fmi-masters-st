@@ -8,6 +8,7 @@ public class RequestInfo {
     private String httpEndpoint;
     private String httpBody;
     private HashMap<String, String> headers = new HashMap<>();
+    private HashMap<String, String> pathVariables = new HashMap<>();
 
     public RequestInfo() {
         this.httpMethod = "";
@@ -17,6 +18,11 @@ public class RequestInfo {
     public RequestInfo(String httpMethod, String httpEndpoint) {
         this.httpMethod = httpMethod;
         this.httpEndpoint = httpEndpoint;
+    }
+
+    public boolean isEmpty() {
+        return this.httpMethod.isEmpty()
+            || this.httpEndpoint.isEmpty();
     }
 
     public boolean hasContent() {
@@ -49,6 +55,42 @@ public class RequestInfo {
         this.headers.put(key, value);
     }
 
+    public boolean isProcessable(String method, String endpoint) {
+        if (!this.httpMethod.equals(method)) {
+            return  false;
+        }
+
+        return isTemplateEndpointMatchingRequest(endpoint);
+    }
+
+    // /customers/{id}
+    // /customers/10
+    public boolean isTemplateEndpointMatchingRequest(String requestEndpoint) {
+        String[] templateEndpointPartsCollection = this.getHttpEndpoint().split("/");
+        String[] requestEndpointPartsCollection = requestEndpoint.split("/");
+
+        if (templateEndpointPartsCollection.length != requestEndpointPartsCollection.length) {
+            return false;
+        }
+
+        for (int i = 0; i < templateEndpointPartsCollection.length; i++) {
+            if (isUrlPartDynamic(templateEndpointPartsCollection[i])){
+                var pathVariableName = extractUrlVariable(templateEndpointPartsCollection[i]);
+                var pathVariableValue = requestEndpointPartsCollection[i];
+
+                this.pathVariables.put(pathVariableName, pathVariableValue);
+
+                continue;
+            }
+
+            if (!templateEndpointPartsCollection[i].equals(requestEndpointPartsCollection[i])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public String getHttpBody() {
         return httpBody;
     }
@@ -67,6 +109,14 @@ public class RequestInfo {
 
     public String getHttpEndpoint() {
         return httpEndpoint;
+    }
+
+    public HashMap<String, String> getPathVariables() {
+        return pathVariables;
+    }
+
+    public void setPathVariables(HashMap<String, String> pathVariables) {
+        this.pathVariables = pathVariables;
     }
 
     public void setHttpEndpoint(String httpEndpoint) {
@@ -88,5 +138,13 @@ public class RequestInfo {
 
         return requestInfo.httpEndpoint.equals(this.httpEndpoint) &&
                 requestInfo.httpMethod.equals(this.httpMethod);
+    }
+
+    private boolean isUrlPartDynamic(String urlPart) {
+        return urlPart.startsWith("{") && urlPart.endsWith("}");
+    }
+
+    private String extractUrlVariable(String url) {
+        return url.substring(1,url.length() - 1);
     }
 }

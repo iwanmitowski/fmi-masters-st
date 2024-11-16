@@ -6,7 +6,12 @@ import org.example.stereotypes.*;
 public class CustomerController {
     @GetMapping("/customer")
     public String fetchAllCustomers() {
-        return "Customer info - GET Request";
+        return "Customers info - GET Request";
+    }
+
+    @GetMapping("/customer/{id}")
+    public String getCustomer(@PathVariable("id") int id) {
+        return "Customer info - GET Request with id " + id;
     }
 
     @PostMapping("/customer")

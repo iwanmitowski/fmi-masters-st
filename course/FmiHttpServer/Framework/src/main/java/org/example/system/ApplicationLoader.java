@@ -2,39 +2,35 @@ package org.example.system;
 
 import org.example.entities.ControllerMeta;
 import org.example.entities.RequestInfo;
-import org.example.stereotypes.Controller;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
 public class ApplicationLoader {
+    private static ApplicationLoader instance = null;
     private ClassLoader classLoader = ClassLoader.getSystemClassLoader();
     private HashMap<RequestInfo, ControllerMeta> controllerLookUpTable = new HashMap<RequestInfo, ControllerMeta>();
 
-    public String executeController(RequestInfo httpRequest) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        var controllerMethodReference = this.controllerLookUpTable.get(
-            new RequestInfo(
-                httpRequest.getHttpMethod(),
-                httpRequest.getHttpEndpoint()));
+    private ApplicationLoader() {
+    }
 
-        if (controllerMethodReference == null) {
-            return "";
+    public static ApplicationLoader getInstance() {
+        if (instance == null) {
+            instance = new ApplicationLoader();
         }
 
-        var currentClass = controllerMethodReference.getClassReference();
-        var methodName = controllerMethodReference.getMethodName();
+        return instance;
+    }
 
-        var controllerInstance = currentClass
-            .getDeclaredConstructor()
-            .newInstance();
+    public HashMap<RequestInfo, ControllerMeta> getControllerTable() {
+        return this.controllerLookUpTable;
+    }
 
-        return (String) currentClass
-            .getMethod(methodName)
-            .invoke(controllerInstance);
+    public ControllerMeta getController(RequestInfo requestInfo) {
+        return  this.controllerLookUpTable.get(requestInfo);
     }
 
     public void findAllClasses(String packageName) throws IOException, ClassNotFoundException {
@@ -90,9 +86,24 @@ public class ApplicationLoader {
 
         if (httpMethod != null) {
             String methodName = method.getName();
+
+            var parameters = method.getParameters();
+            HashMap<Integer, String> pathVariableIndex = new HashMap<>();
+
+            for (int i = 0; i < parameters.length; i++) {
+                var parameter = parameters[i];
+                // get type here
+
+                if (parameter.isAnnotationPresent(org.example.stereotypes.PathVariable.class)) {
+                    var pathVariable = parameter.getAnnotation(org.example.stereotypes.PathVariable.class);
+                    // object here value, type
+                    pathVariableIndex.put(i, pathVariable.value());
+                }
+            }
+
             this.controllerLookUpTable.put(
                 new RequestInfo(httpMethod, endpoint),
-                new ControllerMeta(currentClass, methodName)
+                new ControllerMeta(currentClass, methodName, pathVariableIndex)
             );
         }
     }

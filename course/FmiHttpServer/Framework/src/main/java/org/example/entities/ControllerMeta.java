@@ -1,16 +1,29 @@
 package org.example.entities;
 
+import java.util.HashMap;
+
 public class ControllerMeta {
     private Class classReference;
     private String methodName;
+    private HashMap<Integer, String> pathVariableIndex = new HashMap<>();
 
     public ControllerMeta(Class classReference, String methodName) {
         this.classReference = classReference;
         this.methodName = methodName;
     }
 
+    public ControllerMeta(Class classReference, String methodName, HashMap<Integer, String> pathVariableIndex) {
+        this.classReference = classReference;
+        this.methodName = methodName;
+        this.pathVariableIndex = pathVariableIndex;
+    }
+
     public Class getClassReference() {
         return classReference;
+    }
+
+    public HashMap<Integer, String> getPathVariableIndex() {
+        return this.pathVariableIndex;
     }
 
     public void setClassReference(Class classReference) {

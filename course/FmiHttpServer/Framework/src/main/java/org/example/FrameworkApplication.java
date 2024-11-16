@@ -2,6 +2,7 @@ package org.example;
 
 import org.example.entities.RequestInfo;
 import org.example.system.ApplicationLoader;
+import org.example.system.HttpProcessor;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -10,8 +11,7 @@ import java.net.Socket;
 
 public class FrameworkApplication {
     private static final String NEW_LINE = "\r\n";
-
-    private static ApplicationLoader appLoader = new ApplicationLoader();
+    private static HttpProcessor httpProcessor = new HttpProcessor();
 
     public static void run(Class mainClass) {
         try {
@@ -23,7 +23,7 @@ public class FrameworkApplication {
     }
 
     private static void bootstrap(Class mainClass) throws IOException, ClassNotFoundException {
-        appLoader.findAllClasses(mainClass.getPackageName());
+        ApplicationLoader.getInstance().findAllClasses(mainClass.getPackageName());
     }
 
     private static RequestInfo parseHTTPRequest(InputStream stream) throws IOException {
@@ -81,8 +81,12 @@ public class FrameworkApplication {
 
             var requestInfo = parseHTTPRequest(request);
 
+            if (requestInfo.isEmpty()){
+                continue;
+            }
+
             String controllerMessage =
-                appLoader.executeController(requestInfo);
+                httpProcessor.executeController(requestInfo);
 
             String message = buildHTTPResponse(controllerMessage);
             response.write(message.getBytes());
