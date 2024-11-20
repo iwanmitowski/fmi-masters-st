@@ -1,75 +1,37 @@
 package com.example.p02solar_park_api.solar_park_api.services;
 
 import com.example.p02solar_park_api.solar_park_api.entities.Customer;
-import com.example.p02solar_park_api.solar_park_api.mappers.CustomerRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import com.example.p02solar_park_api.solar_park_api.repositories.CustomerRepository;
 import org.springframework.stereotype.Service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 @Service
 public class CustomerService {
 
-    private JdbcTemplate db;
+    private CustomerRepository customerRepository;
 
-    public CustomerService(JdbcTemplate db) {
-        this.db = db;
+    public CustomerService(CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
     }
 
     public boolean createCustomer(Customer customer) {
-        String query = String.format(
-            "INSERT INTO Customers (name) " +
-            "VALUES ('%s');",
-            customer.getName()
-        );
-        this.db.execute(query);
-
-        return true;
+        return this.customerRepository.create(customer);
     }
 
     public List<Customer> getAllCustomers() {
-        var query = "SELECT * FROM Customers WHERE is_active = true";
-        return this.db.query(query, (rs, rowNum) -> {
-            try {
-                return new CustomerRowMapper().mapRow(rs, rowNum);
-            } catch (Exception e) {
-                return null;
-            }
-        });
+        return this.customerRepository.getAll();
     }
 
     public Customer getById(int id) {
-        var query = "SELECT * FROM Customers WHERE id = ?";
-
-        var customers = this.db.query(query, new Object[]{id}, (rs, rowNum) -> {
-            try {
-                return new CustomerRowMapper().mapRow(rs, rowNum);
-            } catch (Exception e) {
-                return null;
-            }
-        });
-
-        return customers.isEmpty() ? null : customers.get(0);
+        return this.customerRepository.getById(id);
     }
 
     public Customer update(Customer customer) {
-        var updateQuery = "UPDATE Customers SET name = ?, number_of_projects = ? WHERE is_active = true AND id = ?";
-        int rows = this.db.update(updateQuery, customer.getName(), customer.getNumberOfProjects(), customer.getId());
-
-        if (rows == 0) {
-            return null;
-        }
-
-        return this.getById(customer.getId());
+        return this.customerRepository.update(customer);
     }
 
     public boolean delete(int id) {
-        var query = "UPDATE Customers SET is_active = false WHERE id = ?";
-        int rows = this.db.update(query, id);
-
-        return rows > 0;
+        return this.customerRepository.delete(id);
     }
 }
