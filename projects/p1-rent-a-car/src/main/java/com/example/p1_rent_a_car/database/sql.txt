@@ -33,16 +33,18 @@ CREATE TABLE cars (
     manufactured_year INT NOT NULL,
     availability BOOLEAN NOT NULL DEFAULT TRUE,
     price_per_day DECIMAL(10,2) NOT NULL,
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE
+    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
+    city_id INT NOT NULL,
+    FOREIGN KEY (city_id) REFERENCES cities(id)
 );
 
-INSERT INTO cars (make, model, manufactured_year, availability, price_per_day)
+INSERT INTO cars (make, model, manufactured_year, availability, price_per_day, city_id)
 VALUES
-    ('Toyota', 'Corolla', 2020, TRUE, 45.00),
-    ('VW', 'Golf', 2019, TRUE, 40.00),
-    ('BMW', 'X5', 2021, TRUE, 90.00),
-    ('Ford', 'Fiesta', 2018, TRUE, 35.00),
-    ('Audi', 'A4', 2021, TRUE, 85.00);
+    ('Toyota', 'Corolla', 2020, TRUE, 45.00, 1),
+    ('VW', 'Golf', 2019, TRUE, 40.00, 2),
+    ('BMW', 'X5', 2021, TRUE, 90.00, 3),
+    ('Ford', 'Fiesta', 2018, TRUE, 35.00, 4),
+    ('Audi', 'A4', 2021, TRUE, 85.00, 1);
 
 CREATE TABLE status (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -68,3 +70,9 @@ CREATE TABLE offers (
     FOREIGN KEY (car_id) REFERENCES cars(id),
     FOREIGN KEY (status_id) REFERENCES status(id)
 );
+
+-- DROP TABLE IF EXISTS offers;
+-- DROP TABLE IF EXISTS status;
+--  DROP TABLE IF EXISTS cars;
+-- DROP TABLE IF EXISTS clients;
+--  DROP TABLE IF EXISTS cities;

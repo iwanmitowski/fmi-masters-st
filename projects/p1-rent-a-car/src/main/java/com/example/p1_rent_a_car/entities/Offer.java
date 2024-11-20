@@ -9,6 +9,7 @@ public class Offer {
     private double totalPrice;
     private int statusId;
     private String offerDate;
+    private boolean isDeleted;
 
     public Offer(int id, int clientId, int carId, String startDate, String endDate, double totalPrice, int statusId, String offerDate) {
         this.id = id;
@@ -83,5 +84,13 @@ public class Offer {
 
     public void setOfferDate(String offerDate) {
         this.offerDate = offerDate;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 }
