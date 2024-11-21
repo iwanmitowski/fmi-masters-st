@@ -32,15 +32,15 @@ public class CarRepository {
         return rowsAffected > 0;
     }
 
-    public List<Car> getAllCars() {
+    public List<Car> getAllCars(int cityId) {
         var queryBuilder = new StringBuilder();
         queryBuilder.append("SELECT c.id, c.make, c.model, c.manufactured_year, c.availability, ");
         queryBuilder.append("c.price_per_day, c.is_deleted, ct.id AS city_id, ct.name AS city_name ");
         queryBuilder.append("FROM Cars c JOIN Cities ct ON c.city_id = ct.id ");
-        queryBuilder.append("WHERE c.is_deleted = false");
+        queryBuilder.append("WHERE c.is_deleted = false and c.city_id = ?");
 
         var query = queryBuilder.toString();
-        return this.db.query(query, (rs, rowNum) -> {
+        return this.db.query(query, new Object[]{cityId}, (rs, rowNum) -> {
             try {
                 return new CarRowMapper().mapRow(rs, rowNum);
             } catch (Exception e) {

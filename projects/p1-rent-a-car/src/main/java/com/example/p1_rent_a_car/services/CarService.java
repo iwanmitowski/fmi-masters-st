@@ -1,9 +1,7 @@
 package com.example.p1_rent_a_car.services;
 
 import com.example.p1_rent_a_car.database.repositories.CarRepository;
-import com.example.p1_rent_a_car.database.repositories.CityRepository;
 import com.example.p1_rent_a_car.entities.Car;
-import com.example.p1_rent_a_car.entities.City;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,17 +9,20 @@ import java.util.List;
 @Service
 public class CarService {
     private CarRepository carRepository;
-    private CityRepository cityRepository;
+    private ClientService clientService;
+    private CityService cityService;
 
     public CarService(
         CarRepository carRepository,
-        CityRepository cityRepository) {
+        ClientService clientService,
+        CityService cityService) {
         this.carRepository = carRepository;
-        this.cityRepository = cityRepository;
+        this.clientService = clientService;
+        this.cityService = cityService;
     }
 
     public boolean create(Car car) throws IllegalArgumentException {
-        boolean cityExists = doesCityExist(car);
+        boolean cityExists = this.cityService.doesCityExist(car.getCityId());
 
         if (!cityExists) {
             throw new IllegalArgumentException("Invalid city with id: " + car.getCityId());
@@ -30,8 +31,14 @@ public class CarService {
         return this.carRepository.create(car);
     }
 
-    public List<Car> getAllCars() {
-       return this.carRepository.getAllCars();
+    public List<Car> getAllCars(int clientId) {
+        var client = this.clientService.getById(clientId);
+
+        if (client == null) {
+            throw new IllegalArgumentException("Invalid client id");
+        }
+
+        return this.carRepository.getAllCars(clientId);
     }
 
     public Car getById(int id) {
@@ -39,7 +46,7 @@ public class CarService {
     }
 
     public Car update(Car car) {
-        boolean cityExists = doesCityExist(car);
+        boolean cityExists = this.cityService.doesCityExist(car.getCityId());
 
         if (!cityExists) {
             throw new IllegalArgumentException("Invalid city with id: " + car.getCityId());
@@ -52,12 +59,5 @@ public class CarService {
         return this.carRepository.delete(id);
     }
 
-    private boolean doesCityExist(Car car) {
-        var cities = this.cityRepository.getAllCities();
 
-        boolean cityExists = cities.stream()
-            .anyMatch(city -> city.getId() == car.getCityId());
-
-        return cityExists;
-    }
 }

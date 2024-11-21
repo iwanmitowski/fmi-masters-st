@@ -43,13 +43,21 @@ public class CarController {
 
     }
 
-    @GetMapping("/cars")
-    public ResponseEntity<?> getAll() {
-        var result = (ArrayList<Car>)this.service.getAllCars();
-        return AppResponse.success()
-            .withMessage("Successful")
-            .withData(result)
-            .build();
+    @GetMapping("/cars/clients/{clientId}")
+    public ResponseEntity<?> getAll(@PathVariable int clientId) {
+        try {
+            var result = (ArrayList<Car>)this.service.getAllCars(clientId);
+            return AppResponse.success()
+                .withMessage("Successful")
+                .withData(result)
+                .build();
+        } catch (IllegalArgumentException e) {
+            return AppResponse.error()
+                .withMessage(e.getMessage())
+                .withCode(HttpStatus.BAD_REQUEST)
+                .build();
+        }
+
     }
 
     @GetMapping("/cars/{id}")
