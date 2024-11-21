@@ -74,6 +74,6 @@ CREATE TABLE offers (
 
 -- DROP TABLE IF EXISTS offers;
 -- DROP TABLE IF EXISTS status;
---  DROP TABLE IF EXISTS cars;
+-- DROP TABLE IF EXISTS cars;
 -- DROP TABLE IF EXISTS clients;
---  DROP TABLE IF EXISTS cities;
+-- DROP TABLE IF EXISTS cities;
