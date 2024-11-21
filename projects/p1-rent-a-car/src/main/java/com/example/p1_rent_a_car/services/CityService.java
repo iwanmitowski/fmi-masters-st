@@ -16,7 +16,7 @@ public class CityService {
     public boolean doesCityExist(int cityId) {
         var cities = this.cityRepository.getAllCities();
 
-        boolean cityExists = cities.stream()
+        var cityExists = cities.stream()
             .anyMatch(city -> city.getId() == cityId);
 
         return cityExists;

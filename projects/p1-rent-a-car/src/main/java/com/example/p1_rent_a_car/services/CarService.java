@@ -22,7 +22,7 @@ public class CarService {
     }
 
     public boolean create(Car car) throws IllegalArgumentException {
-        boolean cityExists = this.cityService.doesCityExist(car.getCityId());
+        var cityExists = this.cityService.doesCityExist(car.getCityId());
 
         if (!cityExists) {
             throw new IllegalArgumentException("Invalid city with id: " + car.getCityId());
@@ -46,7 +46,7 @@ public class CarService {
     }
 
     public Car update(Car car) {
-        boolean cityExists = this.cityService.doesCityExist(car.getCityId());
+        var cityExists = this.cityService.doesCityExist(car.getCityId());
 
         if (!cityExists) {
             throw new IllegalArgumentException("Invalid city with id: " + car.getCityId());
@@ -58,6 +58,4 @@ public class CarService {
     public boolean delete(int id) {
         return this.carRepository.delete(id);
     }
-
-
 }

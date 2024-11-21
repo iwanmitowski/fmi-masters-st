@@ -66,6 +66,7 @@ CREATE TABLE offers (
     total_price DECIMAL(10,2) NOT NULL,
     status_id INT NOT NULL,
     offer_date DATE NOT NULL,
+    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY (client_id) REFERENCES clients(id),
     FOREIGN KEY (car_id) REFERENCES cars(id),
     FOREIGN KEY (status_id) REFERENCES status(id)

@@ -12,16 +12,16 @@ import java.util.ArrayList;
 
 @Controller
 public class CarController {
-    private CarService service;
+    private CarService carService;
 
-    public CarController(CarService service) {
-        this.service = service;
+    public CarController(CarService carService) {
+        this.carService = carService;
     }
 
     @PostMapping("/cars")
     public ResponseEntity<?> create(@RequestBody Car car) {
         try {
-            var result = this.service.create(car);
+            var result = this.carService.create(car);
 
             if (!result) {
                 return AppResponse.error()
@@ -40,13 +40,12 @@ public class CarController {
                 .withCode(HttpStatus.BAD_REQUEST)
                 .build();
         }
-
     }
 
     @GetMapping("/cars/clients/{clientId}")
     public ResponseEntity<?> getAll(@PathVariable int clientId) {
         try {
-            var result = (ArrayList<Car>)this.service.getAllCars(clientId);
+            var result = (ArrayList<Car>)this.carService.getAllCars(clientId);
             return AppResponse.success()
                 .withMessage("Successful")
                 .withData(result)
@@ -62,7 +61,7 @@ public class CarController {
 
     @GetMapping("/cars/{id}")
     public ResponseEntity<?> getById(@PathVariable int id) {
-        var result = this.service.getById(id);
+        var result = this.carService.getById(id);
         if (result == null) {
             return AppResponse.error()
                 .withMessage("Problem during obtaining car")
@@ -79,7 +78,7 @@ public class CarController {
     @PutMapping("/cars")
     public ResponseEntity<?> update(@RequestBody Car car) {
         try {
-            var result = this.service.update(car);
+            var result = this.carService.update(car);
             if (result == null) {
                 return AppResponse.error()
                     .withMessage("Problem during update")
@@ -102,7 +101,7 @@ public class CarController {
 
     @DeleteMapping("/cars/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) {
-        var result = this.service.delete(id);
+        var result = this.carService.delete(id);
 
         if (!result) {
             return AppResponse.error()
