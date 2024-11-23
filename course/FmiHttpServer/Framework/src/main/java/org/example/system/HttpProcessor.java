@@ -3,13 +3,10 @@ package org.example.system;
 import org.example.entities.ControllerMeta;
 import org.example.entities.RequestInfo;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-
 public class HttpProcessor {
     private ApplicationLoader appLoader = ApplicationLoader.getInstance();
 
-    public String executeController(RequestInfo httpRequest) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public String executeController(RequestInfo httpRequest) throws Exception {
         var httpMethod = httpRequest.getHttpMethod();
         var httpRequestEndpoint = httpRequest.getHttpEndpoint();
         ControllerMeta controllerMethodReference = null;
@@ -30,6 +27,7 @@ public class HttpProcessor {
         var currentClass = controllerMethodReference.getClassReference();
         var methodName = controllerMethodReference.getMethodName();
 
+        // Pri DI Ctor
         var controllerInstance = currentClass
             .getDeclaredConstructor()
             .newInstance();
@@ -38,10 +36,50 @@ public class HttpProcessor {
         var methodSignature = this.buildMethodParameterTypes(controllerMethodReference);
         var arguments = this.buildMethodArguments(controllerMethodReference, httpRequest);
 
+        var fieldCollection = currentClass.getDeclaredFields();
+        for (var field : fieldCollection) {
+            if (field.isAnnotationPresent(org.example.stereotypes.Autowired.class)) {
+                field.setAccessible(true);
+
+                var injectableMaterial = field.getType();
+                var isSingleton = field.getAnnotation(org.example.stereotypes.Autowired.class).isSingleton();
+
+                // Get the top-level instance
+                var injectableInstance = this.appLoader.getInjectable(injectableMaterial, isSingleton);
+
+                // Recursively set fields for the instance (handles nested injection)
+                this.processAutowiredServices(injectableInstance);
+
+                // Set the initialized instance to the current field
+                field.set(controllerInstance, injectableInstance);
+            }
+        }
+
         return (String) currentClass
             .getMethod(methodName, methodSignature)
             .invoke(controllerInstance, arguments);
     }
+
+    private void processAutowiredServices(Object instance) throws Exception {
+        var fields = instance.getClass().getDeclaredFields();
+        for (var field : fields) {
+            if (field.isAnnotationPresent(org.example.stereotypes.Autowired.class)) {
+                field.setAccessible(true);
+
+                var injectableMaterial = field.getType();
+                var isSingleton = field.getAnnotation(org.example.stereotypes.Autowired.class).isSingleton();
+                var injectableInstance = this.appLoader.getInjectable(injectableMaterial, isSingleton);
+                if (injectableMaterial.isAnnotationPresent(org.example.stereotypes.Injectable.class)) {
+                    var nestedInstance = injectableMaterial.getDeclaredConstructor().newInstance();
+                    processAutowiredServices(nestedInstance);
+                    field.set(instance, nestedInstance);
+                } else {
+                    field.set(instance, injectableInstance);
+                }
+            }
+        }
+    }
+
 
     private Class<?>[] buildMethodParameterTypes(ControllerMeta controllerMeta) {
         var pathVariableIndex = controllerMeta.getPathVariableIndex();

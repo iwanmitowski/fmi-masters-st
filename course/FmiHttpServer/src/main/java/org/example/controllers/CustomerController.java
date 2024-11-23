@@ -1,12 +1,16 @@
 package org.example.controllers;
 
+import org.example.services.CustomerService;
 import org.example.stereotypes.*;
 
 @Controller(method = "GET", endpoint = "/customer")
 public class CustomerController {
+    @Autowired
+    private CustomerService customerService;
+
     @GetMapping("/customer")
     public String fetchAllCustomers() {
-        return "Customers info - GET Request";
+        return this.customerService.hello();
     }
 
     @GetMapping("/customer/{id}")

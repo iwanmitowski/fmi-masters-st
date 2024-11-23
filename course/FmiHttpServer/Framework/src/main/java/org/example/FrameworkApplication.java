@@ -69,7 +69,7 @@ public class FrameworkApplication {
         return httpRequest;
     }
 
-    private static void startWebServer() throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    private static void startWebServer() throws Exception {
         ServerSocket serverSocket = new ServerSocket(1423);
         System.out.println("Listening on port 1423");
 

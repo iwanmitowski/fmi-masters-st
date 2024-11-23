@@ -13,6 +13,7 @@ public class ApplicationLoader {
     private static ApplicationLoader instance = null;
     private ClassLoader classLoader = ClassLoader.getSystemClassLoader();
     private HashMap<RequestInfo, ControllerMeta> controllerLookUpTable = new HashMap<RequestInfo, ControllerMeta>();
+    private HashMap<Class, Object> injectableLookUpTable = new HashMap<>();
 
     private ApplicationLoader() {
     }
@@ -31,6 +32,21 @@ public class ApplicationLoader {
 
     public ControllerMeta getController(RequestInfo requestInfo) {
         return  this.controllerLookUpTable.get(requestInfo);
+    }
+
+    public Object getInjectable(Class classKey, boolean isSingleton) {
+        var resultInstance = this.injectableLookUpTable.get(classKey);
+
+        if (resultInstance == null || !isSingleton) {
+            try {
+                resultInstance = classKey.getDeclaredConstructor().newInstance();
+                this.injectableLookUpTable.put(classKey, resultInstance);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return resultInstance;
     }
 
     public void findAllClasses(String packageName) throws IOException, ClassNotFoundException {
@@ -55,7 +71,13 @@ public class ApplicationLoader {
 
         if (currentClass.isAnnotationPresent(org.example.stereotypes.Controller.class)) {
             this.parseController(currentClass);
+        } else if (currentClass.isAnnotationPresent(org.example.stereotypes.Injectable.class)) {
+            this.parseInjectable(currentClass);
         }
+    }
+
+    private void parseInjectable(Class currentClass) {
+        this.injectableLookUpTable.put(currentClass, null);
     }
 
     private void parseController(Class currentClass) {
