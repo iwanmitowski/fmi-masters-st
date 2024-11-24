@@ -1,0 +1,18 @@
+2024-11-24 10:53:32.407155+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "INSERT INTO Customers([*][name]) VALUES (?)"; expected "identifier"; SQL statement:
+INSERT INTO Customers([name]) VALUES (?) [42001-224]
+2024-11-24 10:54:48.928237+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "INSERT INTO Customers([*][name]) VALUES (?)"; expected "identifier"; SQL statement:
+INSERT INTO Customers([name]) VALUES (?) [42001-224]
+2024-11-24 10:56:54.462259+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "INSERT INTO Customers([*][name]) VALUES (?)"; expected "identifier"; SQL statement:
+INSERT INTO Customers([name]) VALUES (?) [42001-224]
+2024-11-24 13:16:09.331226+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "UPDATE Customers SET name=?[*]number_of_projects=? WHERE is_active=? AND ( id=? ) "; SQL statement:
+UPDATE Customers SET name=?number_of_projects=? WHERE is_active=? AND ( id=? )  [42000-224]
+2024-11-24 21:53:19.519840+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "UPDATE Customers SET name=?[*]number_of_projects=? WHERE is_active=? AND ( id=? ) "; SQL statement:
+UPDATE Customers SET name=?number_of_projects=? WHERE is_active=? AND ( id=? )  [42000-224]
+2024-11-24 21:54:43.094797+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "UPDATE Customers SET name=?[*]number_of_projects=? WHERE is_active=? AND ( id=? ) "; SQL statement:
+UPDATE Customers SET name=?number_of_projects=? WHERE is_active=? AND ( id=? )  [42000-224]

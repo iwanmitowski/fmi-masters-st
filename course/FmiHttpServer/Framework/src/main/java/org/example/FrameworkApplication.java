@@ -3,6 +3,7 @@ package org.example;
 import org.example.entities.RequestInfo;
 import org.example.system.ApplicationLoader;
 import org.example.system.HttpProcessor;
+import org.example.system.ResponseMessage;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -85,7 +86,7 @@ public class FrameworkApplication {
                 continue;
             }
 
-            String controllerMessage =
+            var controllerMessage =
                 httpProcessor.executeController(requestInfo);
 
             String message = buildHTTPResponse(controllerMessage);
@@ -97,11 +98,11 @@ public class FrameworkApplication {
         }
     }
 
-    private static String buildHTTPResponse(String body) {
-        return "HTTP/1.1 200 OK" + NEW_LINE +
+    private static String buildHTTPResponse(ResponseMessage response) {
+        return "HTTP/1.1 " + response.getCode() + " " + response.getCodeMessage() + " " + NEW_LINE +
             "Access-Control-Allow-Origin: *" + NEW_LINE +
-            "Content-Length: " + (body.getBytes().length + 1) +  NEW_LINE +
+            "Content-Length: " + (response.getMessage().getBytes().length + 1) +  NEW_LINE +
             "Content-Type: text/html" + NEW_LINE + NEW_LINE +
-            body + NEW_LINE + NEW_LINE;
+            response.getMessage() + NEW_LINE + NEW_LINE;
     }
 }

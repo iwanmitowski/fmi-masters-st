@@ -6,7 +6,7 @@ import org.example.entities.RequestInfo;
 public class HttpProcessor {
     private ApplicationLoader appLoader = ApplicationLoader.getInstance();
 
-    public String executeController(RequestInfo httpRequest) throws Exception {
+    public ResponseMessage executeController(RequestInfo httpRequest) throws Exception {
         var httpMethod = httpRequest.getHttpMethod();
         var httpRequestEndpoint = httpRequest.getHttpEndpoint();
         ControllerMeta controllerMethodReference = null;
@@ -21,18 +21,17 @@ public class HttpProcessor {
         }
 
         if (controllerMethodReference == null) {
-            return "Internal server error";
+            return new ResponseMessage("Something went wrong", 500);
+
         }
 
         var currentClass = controllerMethodReference.getClassReference();
         var methodName = controllerMethodReference.getMethodName();
 
-        // Pri DI Ctor
         var controllerInstance = currentClass
             .getDeclaredConstructor()
             .newInstance();
 
-        // debugni tuka
         var methodSignature = this.buildMethodParameterTypes(controllerMethodReference);
         var arguments = this.buildMethodArguments(controllerMethodReference, httpRequest);
 
@@ -55,9 +54,21 @@ public class HttpProcessor {
             }
         }
 
-        return (String) currentClass
+        var methodReturnType = currentClass
+            .getMethod(methodName, methodSignature)
+            .getReturnType();
+
+        var returnMessage = currentClass
             .getMethod(methodName, methodSignature)
             .invoke(controllerInstance, arguments);
+
+        if (String.class.isInstance(returnMessage)) {
+            return new ResponseMessage((String) returnMessage);
+        } else if (ResponseMessage.class.isInstance(returnMessage)) {
+            return (ResponseMessage) returnMessage;
+        }
+
+        return new ResponseMessage("Something went wrong", 500);
     }
 
     private void processAutowiredServices(Object instance) throws Exception {
@@ -79,7 +90,6 @@ public class HttpProcessor {
             }
         }
     }
-
 
     private Class<?>[] buildMethodParameterTypes(ControllerMeta controllerMeta) {
         var pathVariableIndex = controllerMeta.getPathVariableIndex();

@@ -2,6 +2,7 @@ package org.example.controllers;
 
 import org.example.services.CustomerService;
 import org.example.stereotypes.*;
+import org.example.system.ResponseMessage;
 
 @Controller(method = "GET", endpoint = "/customer")
 public class CustomerController {
@@ -14,8 +15,8 @@ public class CustomerController {
     }
 
     @GetMapping("/customer/{id}")
-    public String getCustomer(@PathVariable("id") int id) {
-        return "Customer info - GET Request with id " + id;
+    public ResponseMessage getCustomer(@PathVariable("id") int id) {
+        return new ResponseMessage("Customer info - GET Request with id \"" + id, 400);
     }
 
     @PostMapping("/customer")
