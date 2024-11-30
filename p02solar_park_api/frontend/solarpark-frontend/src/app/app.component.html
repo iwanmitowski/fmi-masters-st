@@ -1,34 +1,9 @@
-<div class="btn" (click)="processOnCreate()">Create</div>
-
-@for (customer of customerCollection; track $index) {
-<div class="element">
-  <div>{{ customer.name }}</div>
-  <div (click)="processOnEdit(customer)" class="btn">Edit</div>
-  <div (click)="processOnDelete(customer.id)" class="btn">Remove</div>
-</div>
-}
-
-@if (isEditFormVisible && selectedCustomer) {
-<input [(ngModel)]="selectedCustomer.name" type="text">
-
-<!-- <input #customerInput (input)="processOnChangeCustomerName(customerInput.value)" [value]="selectedCustomer?.name"
-  type="text" /> -->
-<button (click)="processOnSave()">Save</button>
-}
-
-@if (isCreateFormVisible) {
 <div>
-  <label for="name">Customer Name</label>
-  <input id="name" type="text" #customerInput (input)="processOnChangeCreateCustomerName(customerInput.value)"
-    [value]="createdCustomer?.name" placeholder="Enter customer name" />
+  <h1>Solar Park api</h1>
 </div>
+<router-outlet>
 
+</router-outlet>
 <div>
-  <label for="numberOfProjects">Number of Projects</label>
-  <input id="numberOfProjects" type="number" #projectsInput
-    (input)="processOnChangeCreateNumberOfProjects(++projectsInput.value)" [value]="createdCustomer?.numberOfProjects"
-    placeholder="Enter number of projects" />
+  <h1>Footer</h1>
 </div>
-
-<button (click)="processOnSaveCreate()">Create</button>
-}

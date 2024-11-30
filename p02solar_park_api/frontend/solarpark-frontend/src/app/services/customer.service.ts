@@ -1,13 +1,14 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Customer } from "../models/customer.model";
+import { environment } from "../environments/environment";
 
 @Injectable({
     providedIn: "root"
 })
 export class CustomerService {
     private httpClient = inject(HttpClient);
-    private baseUrl = 'http://localhost:8165/customers';
+    private baseUrl = `${environment.baseUrl}/customers`;
 
     public getAllCustomers() {
         return this.httpClient.get(this.baseUrl);
@@ -23,5 +24,9 @@ export class CustomerService {
 
     public deleteCustomer(id: number) {
         return this.httpClient.delete(`${this.baseUrl}/${id}`);
+    }
+
+    public getCustomerProjects(id: number) {
+      return this.httpClient.get(`${this.baseUrl}/${id}/projects`);
     }
 }

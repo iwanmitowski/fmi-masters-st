@@ -1,9 +1,7 @@
 package com.example.p02solar_park_api.solar_park_api.controllers;
 
-import com.example.p02solar_park_api.solar_park_api.entities.Customer;
 import com.example.p02solar_park_api.solar_park_api.entities.Project;
 import com.example.p02solar_park_api.solar_park_api.http.AppResponse;
-import com.example.p02solar_park_api.solar_park_api.services.CustomerService;
 import com.example.p02solar_park_api.solar_park_api.services.ProjectService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,73 +11,67 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 
 @Controller
-public class CustomerController {
+public class ProjectController {
+    private ProjectService service;
 
-    private CustomerService customerService;
-    private ProjectService projectService;
-
-
-    public CustomerController(
-        CustomerService customerService,
-        ProjectService projectService) {
-        this.customerService = customerService;
-        this.projectService = projectService;
+    public ProjectController(ProjectService service) {
+        this.service = service;
     }
 
-    @PostMapping("/customers")
-    public ResponseEntity<?> create(@RequestBody Customer customer) {
-        var result = this.customerService.create(customer);
+    @PostMapping("/projects")
+    public ResponseEntity<?> create(@RequestBody Project project) {
+        var result = this.service.create(project);
 
         if (!result) {
             return AppResponse.error()
                 .withMessage("Problem during insert")
                 .withCode(HttpStatus.BAD_REQUEST)
                 .build();
-        }
+    }
 
         return AppResponse.success()
-            .withMessage("Customer created successfully")
+            .withMessage("Project created successfully")
             .withCode(HttpStatus.CREATED)
             .build();
     }
 
-    @GetMapping("/customers")
+    @GetMapping("/projects")
     public ResponseEntity<?> getAll() {
-        var result = (ArrayList<Customer>)this.customerService.getAll();
+        var result = (ArrayList<Project>)this.service.getAll();
         return AppResponse.success()
             .withMessage("Successful")
             .withData(result)
             .build();
     }
 
-    @GetMapping("/customers/{id}")
+    @GetMapping("/projects/customers/{customerId}")
+    public ResponseEntity<?> getByCustomerId(int customerId) {
+        var result = (ArrayList<Project>)this.service.getByCustomerId(customerId);
+        return AppResponse.success()
+                .withMessage("Successful")
+                .withData(result)
+                .build();
+    }
+
+    @GetMapping("/projects/{id}")
     public ResponseEntity<?> getById(@PathVariable int id) {
-        var result = this.customerService.getById(id);
+        var result = this.service.getById(id);
         if (result == null) {
             return AppResponse.error()
-                .withMessage("Problem during obtaining customer")
+                .withMessage("Problem during obtaining project")
                 .withCode(HttpStatus.BAD_REQUEST)
                 .build();
         }
 
         return AppResponse.success()
             .withMessage("Successful")
-            .withData(new Customer[] { result })
+            .withData(new Project[] { result })
             .build();
     }
 
-    @GetMapping("/customers/{id}/projects")
-    public ResponseEntity<?> getCustomerProjects(@PathVariable int id) {
-        var result = (ArrayList<Project>)this.projectService.getByCustomerId(id);
-        return AppResponse.success()
-            .withMessage("Successful")
-            .withData(result)
-            .build();
-    }
-
-    @PutMapping("/customers")
-    public ResponseEntity<?> update(@RequestBody Customer customer) {
-        var result = this.customerService.update(customer);
+    @PutMapping("/projects")
+    public ResponseEntity<?> update(@RequestBody Project project) {
+        var result = this.service.update(project);
         if (result == null) {
             return AppResponse.error()
                 .withMessage("Problem during update")
@@ -89,13 +81,13 @@ public class CustomerController {
 
         return AppResponse.success()
             .withMessage("Successful")
-            .withData(new Customer[] { result })
+            .withData(new Project[] { result })
             .build();
     }
 
-    @DeleteMapping("/customers/{id}")
+    @DeleteMapping("/projects/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) {
-        var result = this.customerService.delete(id);
+        var result = this.service.delete(id);
 
         if (!result) {
             return AppResponse.error()
@@ -107,6 +99,5 @@ public class CustomerController {
         return AppResponse.success()
             .withMessage("Successful")
             .build();
-//        return ResponseUtil.respond("message", "successful", 200);
     }
 }

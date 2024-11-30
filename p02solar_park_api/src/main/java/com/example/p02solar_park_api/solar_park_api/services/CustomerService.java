@@ -15,11 +15,11 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-    public boolean createCustomer(Customer customer) {
+    public boolean create(Customer customer) {
         return this.customerRepository.create(customer);
     }
 
-    public List<Customer> getAllCustomers() {
+    public List<Customer> getAll() {
         return this.customerRepository.getAll();
     }
 

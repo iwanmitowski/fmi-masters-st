@@ -1,0 +1,30 @@
+<div class="btn" (click)="processOnCreate()">Create</div>
+
+<cc-data-grid [inputHeaderConfig]="dataGridMapping" [inputDataSource]="customerCollection" [isEditable]="true"
+  [isNavigatable]="true" [isRemovable]="true" (onNavigate)="processOnNavigate($event)" (onEdit)="processOnEdit($event)"
+  (onRemove)="processOnDelete($event)" />
+
+@if (isEditFormVisible && selectedCustomer) {
+<input [(ngModel)]="selectedCustomer.name" type="text">
+
+<!-- <input #customerInput (input)="processOnChangeCustomerName(customerInput.value)" [value]="selectedCustomer?.name"
+  type="text" /> -->
+<button (click)="processOnSave()">Save</button>
+}
+
+@if (isCreateFormVisible) {
+<div>
+  <label for="name">Customer Name</label>
+  <input id="name" type="text" #customerInput (input)="processOnChangeCreateCustomerName(customerInput.value)"
+    [value]="createdCustomer?.name" placeholder="Enter customer name" />
+</div>
+
+<div>
+  <label for="numberOfProjects">Number of Projects</label>
+  <input id="numberOfProjects" type="number" #projectsInput
+    (input)="processOnChangeCreateNumberOfProjects(++projectsInput.value)" [value]="createdCustomer?.numberOfProjects"
+    placeholder="Enter number of projects" />
+</div>
+
+<button (click)="processOnSaveCreate()">Create</button>
+}

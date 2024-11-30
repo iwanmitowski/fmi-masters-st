@@ -1,0 +1,12 @@
+<h1>Project page</h1>
+<button (click)="state.isCreateProjectVisible = !state.isCreateProjectVisible">Create</button>
+<cc-data-grid [inputHeaderConfig]="dataGridMapping" [inputDataSource]="projectCollection" />
+
+@if (state.isCreateProjectVisible) {
+<input [(ngModel)]="project.name" type="text">
+<input [(ngModel)]="project.cost" type="number">
+
+<!-- <input #customerInput (input)="processOnChangeCustomerName(customerInput.value)" [value]="selectedCustomer?.name"
+  type="text" /> -->
+<button (click)="processOnSave()">Save</button>
+}
