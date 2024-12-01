@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS projects(
     name VARCHAR(256),
     cost NUMBER,
     customer_id INT,
-    is_active INT DEFAULT 1
+    is_active BOOLEAN DEFAULT True
 );
 
 -- Контакти
