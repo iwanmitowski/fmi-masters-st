@@ -1,5 +1,6 @@
 package com.example.chat_mat.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 

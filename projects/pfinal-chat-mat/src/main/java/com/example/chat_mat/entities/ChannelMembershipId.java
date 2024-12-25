@@ -5,13 +5,11 @@ import lombok.*;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
-
-@Embeddable
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter(AccessLevel.PUBLIC)
-@Setter(AccessLevel.PUBLIC)
+//
+//@Embeddable
+//@Data
+//@NoArgsConstructor
+//@AllArgsConstructor
 public class ChannelMembershipId implements Serializable {
     @Column(name = "channel_id")
     private Integer channelId;

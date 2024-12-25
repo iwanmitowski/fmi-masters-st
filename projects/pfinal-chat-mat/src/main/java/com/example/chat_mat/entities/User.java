@@ -27,5 +27,11 @@ public class User {
     private Boolean isDeleted = false;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ChannelMembership> channelMemberships = new HashSet<ChannelMembership>();
+    private Set<ChannelMembership> channelMemberships = new HashSet<>();
+
+    @OneToMany(mappedBy = "currentUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Friendship> friendshipsInitiated = new HashSet<>();
+
+    @OneToMany(mappedBy = "friend", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Friendship> friendshipsReceived = new HashSet<>();
 }
