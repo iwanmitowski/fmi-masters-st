@@ -12,4 +12,5 @@ public class ChannelDTO {
     private Integer id;
     private String name;
     private Boolean isDeleted;
+    private Integer roleId;
 }
