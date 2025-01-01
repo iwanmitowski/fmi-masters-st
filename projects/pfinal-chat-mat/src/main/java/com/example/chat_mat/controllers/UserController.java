@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @Controller
 @RequiredArgsConstructor
 public class UserController {
@@ -29,6 +31,22 @@ public class UserController {
             return AppResponse.error()
                     .withMessage(ex.getMessage())
                     .withCode(HttpStatus.BAD_REQUEST)
+                    .build();
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> getUser(@RequestBody User credentials) {
+        try {
+            var user = userService.getUserByEmailAndPassword(credentials.getEmail(), credentials.getPassword());
+            return AppResponse.success()
+                    .withData(user)
+                    .withCode(HttpStatus.OK)
+                    .build();
+        } catch (IllegalArgumentException ex) {
+            return AppResponse.error()
+                    .withMessage(ex.getMessage())
+                    .withCode(HttpStatus.NOT_FOUND)
                     .build();
         }
     }

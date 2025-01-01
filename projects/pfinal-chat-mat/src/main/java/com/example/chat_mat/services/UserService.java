@@ -23,6 +23,13 @@ public class UserService {
         return mapToUserDTO(userRepository.save(user));
     }
 
+    public UserDTO getUserByEmailAndPassword(String email, String password) {
+        var user = userRepository.findUserByEmailAndPassword(email, password)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        return mapToUserDTO(user);
+    }
+
     public List<UserDTO> searchUsers(String email) {
         if (email != null && !email.isEmpty()) {
             return userRepository.findByEmailContaining(email)
