@@ -65,6 +65,28 @@ public class ChannelController {
         }
     }
 
+    @GetMapping("/channels/{channelId}/members")
+    public ResponseEntity<?> getChannelMembers(@PathVariable Integer channelId) {
+        try {
+            var members = channelService.getChannelMembers(channelId);
+            return AppResponse.success()
+                    .withMessage("Channels fetched successfully")
+                    .withData(members)
+                    .withCode(HttpStatus.OK)
+                    .build();
+        } catch (IllegalArgumentException ex) {
+            return AppResponse.error()
+                    .withMessage("Channel not found")
+                    .withCode(HttpStatus.OK)
+                    .build();
+        } catch (Exception ex) {
+            return AppResponse.error()
+                    .withMessage(ex.getMessage())
+                    .withCode(HttpStatus.BAD_REQUEST)
+                    .build();
+        }
+    }
+
     @DeleteMapping("/channels/{channelId}")
     public ResponseEntity<?> deleteChannel(@PathVariable Integer channelId, @RequestParam Integer userId) {
         try {

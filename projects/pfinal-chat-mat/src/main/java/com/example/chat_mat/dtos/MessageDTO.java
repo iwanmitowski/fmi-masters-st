@@ -15,4 +15,5 @@ public class MessageDTO {
     private LocalDateTime timestamp;
     private Integer channelId;
     private Integer userId;
+    private UserDTO user;
 }

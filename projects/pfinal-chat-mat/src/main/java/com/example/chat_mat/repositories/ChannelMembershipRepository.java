@@ -13,4 +13,5 @@ public interface ChannelMembershipRepository extends JpaRepository<ChannelMember
     List<ChannelMembership> findByUserId(Integer userId);
     Optional<ChannelMembership> findByChannelIdAndUserIdAndRoleId(Integer channelId, Integer userId, Integer roleId);
     boolean existsByChannelIdAndUserId(Integer channelId, Integer userId);
+    List<ChannelMembership> findByChannelId(Integer channelId);
 }

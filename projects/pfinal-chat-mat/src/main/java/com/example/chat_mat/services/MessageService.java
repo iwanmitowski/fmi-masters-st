@@ -1,6 +1,7 @@
 package com.example.chat_mat.services;
 
 import com.example.chat_mat.dtos.MessageDTO;
+import com.example.chat_mat.dtos.UserDTO;
 import com.example.chat_mat.entities.Channel;
 import com.example.chat_mat.entities.Message;
 import com.example.chat_mat.entities.User;
@@ -39,7 +40,7 @@ public class MessageService {
     }
 
     public List<MessageDTO> getMessagesByChannel(Integer channelId) {
-        return messageRepository.findByChannelIdOrderByTimestampDesc(channelId)
+        return messageRepository.findByChannelIdOrderByTimestampAsc(channelId)
                 .stream()
                 .map(this::mapToMessageDTO)
                 .collect(Collectors.toList());
@@ -51,7 +52,18 @@ public class MessageService {
                 message.getContent(),
                 message.getTimestamp(),
                 message.getChannel().getId(),
-                message.getUser().getId()
+                message.getUser().getId(),
+                mapUserDTO(message.getUser())
+        );
+    }
+
+    private UserDTO mapUserDTO(User user) {
+        return new UserDTO(
+                user.getId(),
+                user.getEmail(),
+                user.getIsDeleted(),
+                null,
+                null
         );
     }
 }

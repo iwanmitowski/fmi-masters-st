@@ -1,12 +1,16 @@
 package com.example.chat_mat.services;
 
 import com.example.chat_mat.dtos.ChannelDTO;
+import com.example.chat_mat.dtos.ChannelMembershipDTO;
+import com.example.chat_mat.dtos.RoleDTO;
+import com.example.chat_mat.dtos.UserDTO;
 import com.example.chat_mat.entities.*;
 import com.example.chat_mat.repositories.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -175,6 +179,13 @@ public class ChannelService {
         channelMembershipRepository.save(membership);
     }
 
+    public List<ChannelMembershipDTO> getChannelMembers(Integer channelId) {
+        return channelMembershipRepository.findByChannelId(channelId)
+                .stream()
+                .map(this::mapToChannelMembershipDTO)
+                .collect(Collectors.toList());
+    }
+
     private ChannelDTO mapToChannelDTO(Channel channel) {
         ChannelDTO dto = new ChannelDTO();
         dto.setId(channel.getId());
@@ -189,6 +200,31 @@ public class ChannelService {
         dto.setName(channel.getName());
         dto.setIsDeleted(channel.getIsDeleted());
         dto.setRoleId(roleId);
+        return dto;
+    }
+
+    private UserDTO mapUserDTO(User user) {
+        return new UserDTO(
+                user.getId(),
+                user.getEmail(),
+                user.getIsDeleted(),
+                null,
+                null
+        );
+    }
+
+    private RoleDTO mapToRoleDTO(Role role) {
+        RoleDTO dto = new RoleDTO();
+        dto.setId(role.getId());
+        dto.setRoleName(role.getRoleName());
+        return dto;
+    }
+
+    private ChannelMembershipDTO mapToChannelMembershipDTO(ChannelMembership channelMembership) {
+        ChannelMembershipDTO dto = new ChannelMembershipDTO();
+        dto.setChannel(mapToChannelDTO(channelMembership.getChannel()));
+        dto.setUser(mapUserDTO(channelMembership.getUser()));
+        dto.setRole(mapToRoleDTO(channelMembership.getRole()));
         return dto;
     }
 }

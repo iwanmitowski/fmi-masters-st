@@ -1,5 +1,6 @@
 package com.example.chat_mat.dtos;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,9 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChannelDTO {
+public class RoleDTO {
     private Integer id;
-    private String name;
-    private Boolean isDeleted;
-    private Integer roleId;
+    private String roleName;
 }
