@@ -26,7 +26,7 @@ export async function getChannelMembers(channelId) {
       return response.data.data.map((member) => {
         return {
           ...member.user,
-          ...member.role,
+          role: member.role,
         };
       });
     }
@@ -34,5 +34,19 @@ export async function getChannelMembers(channelId) {
   } catch (error) {
     console.log(error);
     return [];
+  }
+}
+
+export async function removeGuest(channelId, ownerId, guestId) {
+  try {
+    const response = await axios.delete(
+      `${baseUrl}/channels/${channelId}/remove-guest`,
+      {
+        params: { ownerId, guestId },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
   }
 }

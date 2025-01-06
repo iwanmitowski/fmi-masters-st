@@ -6,6 +6,7 @@ import * as userService from "../../services/userService";
 import * as channelService from "../../services/channelService";
 import * as messageService from "../../services/messageService";
 import { Col } from "react-bootstrap";
+import { roles } from "../../utils/constants";
 
 const Home = () => {
   const [messages, setMessages] = useState([]);
@@ -87,6 +88,22 @@ const Home = () => {
     }
   };
 
+  const handleRemoveGuest = async (guestId) => {
+    try {
+      if (!selectedChannelId) {
+        return;
+      }
+
+      await channelService.removeGuest(selectedChannelId, user.id, guestId);
+
+      setChannelMembers((prevMembers) =>
+        prevMembers.filter((member) => member.id !== guestId)
+      );
+    } catch (error) {
+      console.error("Unexpected error:", error);
+    }
+  };
+
   useEffect(() => {
     if (selectedChannelId) {
       const interval = setInterval(async () => {
@@ -116,8 +133,12 @@ const Home = () => {
         <ChatContainer
           channelName={channels.find((ch) => ch.id === selectedChannelId)?.name}
           channelMembers={channelMembers}
+          isOwner={channelMembers.some(
+            (u) => u.id === user.id && u.role.id === roles.OWNER
+          )}
           messages={messages}
           onSendMessage={handleSendMessage}
+          onRemoveGuest={handleRemoveGuest}
         />
       </Col>
     </div>

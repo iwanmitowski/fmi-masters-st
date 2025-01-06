@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { Col, Row } from "react-bootstrap";
+import { roles } from "../../utils/constants";
 
 const ChatContainer = ({
   channelName,
   channelMembers,
+  isOwner,
   messages,
   onSendMessage,
+  onRemoveGuest,
 }) => {
   const [message, setMessage] = useState("");
 
@@ -55,7 +58,25 @@ const ChatContainer = ({
           {channelMembers.map((member, index) => (
             <div key={index} className="mb-2">
               <strong>
-                <span>{member.email}</span>-<span>{member.roleName}</span>
+                <span>{member.email}</span>{" "}
+                <span>{member.role.roleName} - </span>
+                {isOwner && member.role.id === roles.GUEST ? (
+                  <button
+                    style={{ color: "red", cursor: "pointer" }}
+                    onClick={() => onRemoveGuest(member.id)}
+                  >
+                    X
+                  </button>
+                ) : null}
+                {isOwner && member.role.id === roles.GUEST ? (
+                  <button
+                    className="ml-2"
+                    style={{ color: "green", cursor: "pointer" }}
+                    onClick={() => onRemoveGuest(member.id)}
+                  >
+                    To Admin
+                  </button>
+                ) : null}
               </strong>
             </div>
           ))}
