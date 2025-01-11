@@ -13,20 +13,21 @@ const ChatContainer = ({
   onRemoveGuest,
   onPromoteToAdmin,
   onAddGuestMember,
+  onChangeChannelName,
 }) => {
   const [message, setMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [nonMembers, setNonMembers] = useState([]);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editedChannelName, setEditedChannelName] = useState(channelName);
 
   useEffect(() => {
     async function fetchUsers() {
       try {
         const memberIds = channelMembers.map((member) => member.id);
-
         const filteredUsers = friends.filter(
           (user) => !memberIds.includes(user.id)
         );
-
         setNonMembers(filteredUsers);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -51,10 +52,41 @@ const ChatContainer = ({
     setShowModal(false);
   };
 
+  const handleSaveName = () => {
+    onChangeChannelName(editedChannelName);
+    setIsEditingName(false);
+  };
+
   return (
     <div className="w-3/4 h-full bg-yellow-100 p-4 flex flex-col">
       <Row>
-        <h2>{channelName}</h2>
+        <Col sm={8}>
+          <h2>
+            {isOwner && isEditingName ? (
+              <div className="d-flex align-items-center">
+                <input
+                  type="text"
+                  value={editedChannelName}
+                  onChange={(e) => setEditedChannelName(e.target.value)}
+                  className="form-control"
+                />
+                <Button
+                  variant="primary"
+                  className="ml-2"
+                  onClick={handleSaveName}
+                >
+                  Save
+                </Button>
+              </div>
+            ) : (
+              <span
+                onClick={isOwner ? () => setIsEditingName(true) : undefined}
+              >
+                {channelName}
+              </span>
+            )}
+          </h2>
+        </Col>
       </Row>
       <Row>
         <Col sm={8}>
@@ -76,12 +108,13 @@ const ChatContainer = ({
               placeholder="Enter your message..."
               className="flex-1 p-2 border border-gray-400 rounded-l"
             />
-            <button
+            <Button
+              variant="primary"
               type="submit"
               className="bg-blue-500 text-white px-4 rounded-r"
             >
               Send
-            </button>
+            </Button>
           </form>
         </Col>
         <Col sm={4}>

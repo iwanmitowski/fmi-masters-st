@@ -76,6 +76,24 @@ export async function addGuest(channelId, userId, guestId) {
 
     throw new Error("Failed to add guest");
   } catch (error) {
-    console.error("Error adding guest:", error);
+    console.log(error);
+  }
+}
+
+export async function changeChannelName(channelId, ownerId, newName) {
+  try {
+    const response = await axios.put(
+      `${baseUrl}/channels`,
+      { id: channelId, name: newName },
+      { params: { ownerId } }
+    );
+
+    if (response.data.code === 200) {
+      return response.data.message;
+    }
+    throw new Error("Failed to change channel name");
+  } catch (error) {
+    console.log(error);
+    return null;
   }
 }

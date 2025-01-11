@@ -148,6 +148,28 @@ const Home = () => {
     }
   };
 
+  const handleChangeChannelName = async (newName) => {
+    try {
+      if (!selectedChannelId) {
+        return;
+      }
+
+      await channelService.changeChannelName(
+        selectedChannelId,
+        user.id,
+        newName
+      );
+
+      setChannels((prevChannels) =>
+        prevChannels.map((ch) =>
+          ch.id === selectedChannelId ? { ...ch, name: newName } : ch
+        )
+      );
+    } catch (error) {
+      console.error("Error changing channel name:", error);
+    }
+  };
+
   useEffect(() => {
     if (selectedChannelId) {
       const interval = setInterval(async () => {
@@ -189,6 +211,7 @@ const Home = () => {
           onRemoveGuest={handleRemoveGuest}
           onPromoteToAdmin={handlePromoteToAdmin}
           onAddGuestMember={handleAddGuestMember}
+          onChangeChannelName={handleChangeChannelName}
         />
       </Col>
     </div>
