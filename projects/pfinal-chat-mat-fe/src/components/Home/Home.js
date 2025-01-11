@@ -125,6 +125,29 @@ const Home = () => {
     }
   };
 
+  const handleAddGuestMember = async (guestId) => {
+    try {
+      if (!selectedChannelId) {
+        return;
+      }
+
+      const guestUser = friends.find((friend) => friend.id === guestId);
+      if (!guestUser) {
+        console.error("Guest not found among friends");
+        return;
+      }
+
+      await channelService.addGuest(selectedChannelId, user.id, guestUser.id);
+
+      const updatedMembers = await channelService.getChannelMembers(
+        selectedChannelId
+      );
+      setChannelMembers(updatedMembers);
+    } catch (error) {
+      console.error("Error adding guest member:", error);
+    }
+  };
+
   useEffect(() => {
     if (selectedChannelId) {
       const interval = setInterval(async () => {
@@ -157,10 +180,15 @@ const Home = () => {
           isOwner={channelMembers.some(
             (u) => u.id === user.id && u.role.id === roles.OWNER
           )}
+          isAdmin={channelMembers.some(
+            (u) => u.id === user.id && u.role.id === roles.ADMIN
+          )}
           messages={messages}
+          friends={friends}
           onSendMessage={handleSendMessage}
           onRemoveGuest={handleRemoveGuest}
           onPromoteToAdmin={handlePromoteToAdmin}
+          onAddGuestMember={handleAddGuestMember}
         />
       </Col>
     </div>

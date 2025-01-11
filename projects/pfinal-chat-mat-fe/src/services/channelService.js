@@ -41,6 +41,7 @@ export async function removeGuest(channelId, ownerId, guestId) {
   try {
     const response = await axios.delete(
       `${baseUrl}/channels/${channelId}/remove-guest`,
+      null,
       {
         params: { ownerId, guestId },
       }
@@ -54,11 +55,27 @@ export async function removeGuest(channelId, ownerId, guestId) {
 
 export async function promoteToAdmin(channelId, ownerId, guestId) {
   try {
-    await axios.post(`${baseUrl}/channels/${channelId}/promote-to-admin`, {
-      params: { ownerId, guestId },
-    });
+    await axios.post(
+      `${baseUrl}/channels/${channelId}/promote-to-admin`,
+      null,
+      {
+        params: { ownerId, guestId },
+      }
+    );
     throw new Error("Failed to promote guest to admin");
   } catch (error) {
     console.log(error);
+  }
+}
+
+export async function addGuest(channelId, userId, guestId) {
+  try {
+    await axios.post(`${baseUrl}/channels/${channelId}/add-guest`, null, {
+      params: { userId, guestId },
+    });
+
+    throw new Error("Failed to add guest");
+  } catch (error) {
+    console.error("Error adding guest:", error);
   }
 }

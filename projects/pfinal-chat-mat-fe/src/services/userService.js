@@ -9,7 +9,7 @@ export async function getUsers(search = "") {
       params: { search },
     });
 
-    if (response.data.status === "success" && response.data.code === 200) {
+    if (response.data.code === 200) {
       return response.data.data;
     }
   } catch (error) {

@@ -7,7 +7,6 @@ export const IdentityProvider = ({ children }) => {
   const [user, setUser] = useLocalStorage("auth", null);
 
   const userLogin = (data) => {
-    debugger;
     setUser(data);
   };
 
