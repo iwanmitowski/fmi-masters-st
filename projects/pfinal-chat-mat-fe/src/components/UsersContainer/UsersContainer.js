@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import * as userService from "../../services/userService";
+import { useIdentityContext } from "../../hooks/useIdentityContext";
 
 const UsersContainer = ({ friends, onAddFriend }) => {
   const [users, setUsers] = useState([]);
+  const { user } = useIdentityContext();
 
   useEffect(() => {
     async function fetchUsers() {
@@ -11,7 +13,8 @@ const UsersContainer = ({ friends, onAddFriend }) => {
         const response = await userService.getUsers();
 
         const filteredUsers = response.filter(
-          (user) => !friends.some((friend) => friend.id === user.id)
+          (u) =>
+            !friends.some((friend) => friend.id === u.id) && !u.id === user.id
         );
 
         setUsers(filteredUsers);
@@ -21,7 +24,7 @@ const UsersContainer = ({ friends, onAddFriend }) => {
     }
 
     fetchUsers();
-  }, [friends]);
+  }, [friends, user.id]);
 
   return (
     <div className="w-3/4 h-full bg-light p-4">
