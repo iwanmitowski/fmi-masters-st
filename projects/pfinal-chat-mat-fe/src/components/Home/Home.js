@@ -6,7 +6,8 @@ import * as userService from "../../services/userService";
 import * as channelService from "../../services/channelService";
 import * as messageService from "../../services/messageService";
 import { Col } from "react-bootstrap";
-import { roles } from "../../utils/constants";
+import { chatTypes, roles, views } from "../../utils/constants";
+import UsersContainer from "../UsersContainer/UsersContainer";
 
 const Home = () => {
   const [messages, setMessages] = useState([]);
@@ -14,6 +15,7 @@ const Home = () => {
   const [friends, setFriends] = useState([]);
   const [channelMembers, setChannelMembers] = useState([]);
   const [selectedChannelId, setSelectedChannelId] = useState(null);
+  const [view, setView] = useState(views.CHANNELS);
   const { user } = useIdentityContext();
 
   useEffect(() => {
@@ -40,7 +42,7 @@ const Home = () => {
     try {
       const currentUserId = user.id;
 
-      if (type === "friend") {
+      if (type === chatTypes.FRIEND) {
         const smallerId = Math.min(currentUserId, id);
         const largerId = Math.max(currentUserId, id);
         const channelName = `${smallerId}-${largerId}`;
@@ -55,7 +57,7 @@ const Home = () => {
           console.log(members);
           setChannelMembers(members);
         }
-      } else if (type === "channel") {
+      } else if (type === chatTypes.CHANNEL) {
         setSelectedChannelId(id);
         const messages = await messageService.getMessages(id);
         setMessages(messages);
@@ -170,6 +172,32 @@ const Home = () => {
     }
   };
 
+  const handleAddFriend = async (friendId) => {
+    try {
+      await userService.addFriend(user.id, friendId);
+
+      const updatedUsers = await userService.getUsers();
+      const currentUser = updatedUsers.find((u) => u.id === user.id);
+
+      if (currentUser) {
+        setFriends(currentUser.friendshipsInitiatedUsers);
+      }
+
+      const updatedChannels = await channelService.getChannels(user.id);
+      setChannels(updatedChannels);
+    } catch (error) {
+      console.error("Error adding friend:", error);
+    }
+  };
+
+  const handleFindFriends = () => {
+    setView(views.USERS);
+  };
+
+  const handleChannels = () => {
+    setView(views.CHANNELS);
+  };
+
   useEffect(() => {
     if (selectedChannelId) {
       const interval = setInterval(async () => {
@@ -193,26 +221,36 @@ const Home = () => {
           channels={channels}
           friends={friends}
           onSelect={handleSelect}
+          onFindFriends={
+            view === views.CHANNELS ? handleFindFriends : handleChannels
+          }
+          view={view}
         />
       </Col>
       <Col sm={10}>
-        <ChatContainer
-          channelName={channels.find((ch) => ch.id === selectedChannelId)?.name}
-          channelMembers={channelMembers}
-          isOwner={channelMembers.some(
-            (u) => u.id === user.id && u.role.id === roles.OWNER
-          )}
-          isAdmin={channelMembers.some(
-            (u) => u.id === user.id && u.role.id === roles.ADMIN
-          )}
-          messages={messages}
-          friends={friends}
-          onSendMessage={handleSendMessage}
-          onRemoveGuest={handleRemoveGuest}
-          onPromoteToAdmin={handlePromoteToAdmin}
-          onAddGuestMember={handleAddGuestMember}
-          onChangeChannelName={handleChangeChannelName}
-        />
+        {view === views.CHANNELS ? (
+          <ChatContainer
+            channelName={
+              channels.find((ch) => ch.id === selectedChannelId)?.name
+            }
+            channelMembers={channelMembers}
+            isOwner={channelMembers.some(
+              (u) => u.id === user.id && u.role.id === roles.OWNER
+            )}
+            isAdmin={channelMembers.some(
+              (u) => u.id === user.id && u.role.id === roles.ADMIN
+            )}
+            messages={messages}
+            friends={friends}
+            onSendMessage={handleSendMessage}
+            onRemoveGuest={handleRemoveGuest}
+            onPromoteToAdmin={handlePromoteToAdmin}
+            onAddGuestMember={handleAddGuestMember}
+            onChangeChannelName={handleChangeChannelName}
+          />
+        ) : (
+          <UsersContainer friends={friends} onAddFriend={handleAddFriend} />
+        )}
       </Col>
     </div>
   );

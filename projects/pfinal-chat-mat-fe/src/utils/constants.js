@@ -7,3 +7,13 @@ export const roles = {
   ADMIN: 2,
   GUEST: 3,
 };
+
+export const views = {
+  CHANNELS: 1,
+  USERS: 2,
+};
+
+export const chatTypes = {
+  FRIEND: 1,
+  CHANNEL: 2,
+};

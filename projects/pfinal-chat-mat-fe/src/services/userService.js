@@ -17,3 +17,15 @@ export async function getUsers(search = "") {
     return [];
   }
 }
+
+export async function addFriend(currentUserId, friendId) {
+  try {
+    const response = await axios.post(`${baseUrl}/add-friend`, null, {
+      params: { currentUserId, friendId },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error adding friend:", error);
+    throw error;
+  }
+}
