@@ -48,5 +48,17 @@ export async function removeGuest(channelId, ownerId, guestId) {
     return response.data;
   } catch (error) {
     console.log(error);
+    return null;
+  }
+}
+
+export async function promoteToAdmin(channelId, ownerId, guestId) {
+  try {
+    await axios.post(`${baseUrl}/channels/${channelId}/promote-to-admin`, {
+      params: { ownerId, guestId },
+    });
+    throw new Error("Failed to promote guest to admin");
+  } catch (error) {
+    console.log(error);
   }
 }

@@ -9,6 +9,7 @@ const ChatContainer = ({
   messages,
   onSendMessage,
   onRemoveGuest,
+  onPromoteToAdmin,
 }) => {
   const [message, setMessage] = useState("");
 
@@ -72,7 +73,7 @@ const ChatContainer = ({
                   <button
                     className="ml-2"
                     style={{ color: "green", cursor: "pointer" }}
-                    onClick={() => onRemoveGuest(member.id)}
+                    onClick={() => onPromoteToAdmin(member.id)}
                   >
                     To Admin
                   </button>

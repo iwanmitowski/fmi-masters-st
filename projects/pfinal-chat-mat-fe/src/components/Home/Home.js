@@ -52,6 +52,7 @@ const Home = () => {
           setMessages(messages);
 
           const members = await channelService.getChannelMembers(channel.id);
+          console.log(members);
           setChannelMembers(members);
         }
       } else if (type === "channel") {
@@ -104,6 +105,26 @@ const Home = () => {
     }
   };
 
+  const handlePromoteToAdmin = async (guestId) => {
+    try {
+      if (!selectedChannelId) {
+        return;
+      }
+
+      await channelService.promoteToAdmin(selectedChannelId, user.id, guestId);
+
+      setChannelMembers((prevMembers) =>
+        prevMembers.map((member) =>
+          member.id === guestId
+            ? { ...member, role: { id: roles.ADMIN, roleName: "ADMIN" } }
+            : member
+        )
+      );
+    } catch (error) {
+      console.error("Unexpected error:", error);
+    }
+  };
+
   useEffect(() => {
     if (selectedChannelId) {
       const interval = setInterval(async () => {
@@ -139,6 +160,7 @@ const Home = () => {
           messages={messages}
           onSendMessage={handleSendMessage}
           onRemoveGuest={handleRemoveGuest}
+          onPromoteToAdmin={handlePromoteToAdmin}
         />
       </Col>
     </div>
