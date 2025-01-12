@@ -127,12 +127,12 @@ const ChatContainer = ({
           {channelMembers.map((member, index) => (
             <div key={index} className="mb-2">
               <strong>
-                <span>{member.email}</span>{" "}
-                <span>{member.role.roleName} - </span>
+                <span>{member.email}</span> <span>{member.role.roleName} </span>
                 {isOwner && member.role.id === roles.GUEST ? (
                   <>
                     <Button
                       variant="danger"
+                      className="ml-2"
                       onClick={() => onRemoveGuest(member.id)}
                     >
                       X

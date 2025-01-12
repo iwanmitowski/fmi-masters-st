@@ -97,3 +97,17 @@ export async function changeChannelName(channelId, ownerId, newName) {
     return null;
   }
 }
+
+export async function createChannel(userId, channelName) {
+  try {
+    const response = await axios.post(`${baseUrl}/channels?userId=${userId}`, {
+      name: channelName,
+    });
+    if (response.data.code === 201) {
+      return response.data.data;
+    }
+  } catch (error) {
+    console.error("Error creating channel:", error);
+    throw error;
+  }
+}

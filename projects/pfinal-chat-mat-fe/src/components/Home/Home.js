@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { Col, Row, Button, Modal, Form } from "react-bootstrap";
 import Sidebar from "../shared/Sidebar/Sidebar";
 import ChatContainer from "../Chat/ChatContainer";
+import UsersContainer from "../UsersContainer/UsersContainer";
 import { useIdentityContext } from "../../hooks/useIdentityContext";
 import * as userService from "../../services/userService";
 import * as channelService from "../../services/channelService";
 import * as messageService from "../../services/messageService";
-import { Col } from "react-bootstrap";
 import { chatTypes, roles, views } from "../../utils/constants";
-import UsersContainer from "../UsersContainer/UsersContainer";
 
 const Home = () => {
   const [messages, setMessages] = useState([]);
@@ -16,6 +16,8 @@ const Home = () => {
   const [channelMembers, setChannelMembers] = useState([]);
   const [selectedChannelId, setSelectedChannelId] = useState(null);
   const [view, setView] = useState(views.CHANNELS);
+  const [showCreateChannelModal, setShowCreateChannelModal] = useState(false);
+  const [newChannelName, setNewChannelName] = useState("");
   const { user } = useIdentityContext();
 
   useEffect(() => {
@@ -54,7 +56,6 @@ const Home = () => {
           setMessages(messages);
 
           const members = await channelService.getChannelMembers(channel.id);
-          console.log(members);
           setChannelMembers(members);
         }
       } else if (type === chatTypes.CHANNEL) {
@@ -91,102 +92,19 @@ const Home = () => {
     }
   };
 
-  const handleRemoveGuest = async (guestId) => {
+  const handleCreateChannel = async () => {
     try {
-      if (!selectedChannelId) {
-        return;
-      }
-
-      await channelService.removeGuest(selectedChannelId, user.id, guestId);
-
-      setChannelMembers((prevMembers) =>
-        prevMembers.filter((member) => member.id !== guestId)
-      );
-    } catch (error) {
-      console.error("Unexpected error:", error);
-    }
-  };
-
-  const handlePromoteToAdmin = async (guestId) => {
-    try {
-      if (!selectedChannelId) {
-        return;
-      }
-
-      await channelService.promoteToAdmin(selectedChannelId, user.id, guestId);
-
-      setChannelMembers((prevMembers) =>
-        prevMembers.map((member) =>
-          member.id === guestId
-            ? { ...member, role: { id: roles.ADMIN, roleName: "ADMIN" } }
-            : member
-        )
-      );
-    } catch (error) {
-      console.error("Unexpected error:", error);
-    }
-  };
-
-  const handleAddGuestMember = async (guestId) => {
-    try {
-      if (!selectedChannelId) {
-        return;
-      }
-
-      const guestUser = friends.find((friend) => friend.id === guestId);
-      if (!guestUser) {
-        console.error("Guest not found among friends");
-        return;
-      }
-
-      await channelService.addGuest(selectedChannelId, user.id, guestUser.id);
-
-      const updatedMembers = await channelService.getChannelMembers(
-        selectedChannelId
-      );
-      setChannelMembers(updatedMembers);
-    } catch (error) {
-      console.error("Error adding guest member:", error);
-    }
-  };
-
-  const handleChangeChannelName = async (newName) => {
-    try {
-      if (!selectedChannelId) {
-        return;
-      }
-
-      await channelService.changeChannelName(
-        selectedChannelId,
+      const newChannel = await channelService.createChannel(
         user.id,
-        newName
+        newChannelName
       );
-
-      setChannels((prevChannels) =>
-        prevChannels.map((ch) =>
-          ch.id === selectedChannelId ? { ...ch, name: newName } : ch
-        )
-      );
+      setChannels((prevChannels) => [...prevChannels, newChannel]);
+      setShowCreateChannelModal(false);
+      setNewChannelName("");
+      handleSelect(newChannel.id, chatTypes.CHANNEL);
+      setView(views.CHANNELS);
     } catch (error) {
-      console.error("Error changing channel name:", error);
-    }
-  };
-
-  const handleAddFriend = async (friendId) => {
-    try {
-      await userService.addFriend(user.id, friendId);
-
-      const updatedUsers = await userService.getUsers();
-      const currentUser = updatedUsers.find((u) => u.id === user.id);
-
-      if (currentUser) {
-        setFriends(currentUser.friendshipsInitiatedUsers);
-      }
-
-      const updatedChannels = await channelService.getChannels(user.id);
-      setChannels(updatedChannels);
-    } catch (error) {
-      console.error("Error adding friend:", error);
+      console.error("Error creating channel:", error);
     }
   };
 
@@ -203,7 +121,6 @@ const Home = () => {
       const interval = setInterval(async () => {
         try {
           const messages = await messageService.getMessages(selectedChannelId);
-          console.log(messages);
           setMessages(messages);
         } catch (error) {
           console.error(error);
@@ -224,6 +141,7 @@ const Home = () => {
           onFindFriends={
             view === views.CHANNELS ? handleFindFriends : handleChannels
           }
+          onCreateChannel={() => setShowCreateChannelModal(true)}
           view={view}
         />
       </Col>
@@ -243,15 +161,43 @@ const Home = () => {
             messages={messages}
             friends={friends}
             onSendMessage={handleSendMessage}
-            onRemoveGuest={handleRemoveGuest}
-            onPromoteToAdmin={handlePromoteToAdmin}
-            onAddGuestMember={handleAddGuestMember}
-            onChangeChannelName={handleChangeChannelName}
           />
         ) : (
-          <UsersContainer friends={friends} onAddFriend={handleAddFriend} />
+          <UsersContainer friends={friends} />
         )}
       </Col>
+
+      <Modal
+        show={showCreateChannelModal}
+        onHide={() => setShowCreateChannelModal(false)}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Create Channel</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group controlId="channelName">
+            <Form.Label>Channel Name</Form.Label>
+            <Form.Control
+              type="text"
+              value={newChannelName}
+              onChange={(e) => setNewChannelName(e.target.value)}
+              placeholder="Enter channel name"
+              required
+            />
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => setShowCreateChannelModal(false)}
+          >
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleCreateChannel}>
+            Create
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

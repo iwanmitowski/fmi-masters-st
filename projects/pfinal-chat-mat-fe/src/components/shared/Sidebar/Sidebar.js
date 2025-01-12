@@ -2,7 +2,14 @@ import React from "react";
 import { Button } from "react-bootstrap";
 import { chatTypes, views } from "../../../utils/constants";
 
-const Sidebar = ({ channels, friends, onSelect, onFindFriends, view }) => {
+const Sidebar = ({
+  channels,
+  friends,
+  onSelect,
+  onFindFriends,
+  onCreateChannel,
+  view,
+}) => {
   return (
     <div className="w-1/4 h-full p-4">
       <h2 className="font-bold text-lg mb-4">Channels</h2>
@@ -17,8 +24,14 @@ const Sidebar = ({ channels, friends, onSelect, onFindFriends, view }) => {
           </li>
         ))}
       </ul>
-
-      <h2 className="font-bold text-lg mb-4">Friends</h2>
+      <Button
+        variant="dark"
+        onClick={onCreateChannel}
+        className="bg-blue-500 text-white px-4 py-2 rounded w-full mb-4"
+      >
+        Create Channel
+      </Button>
+      ;<h2 className="font-bold text-lg mb-4">Friends</h2>
       <ul className="mb-8">
         {friends.map((friend) => (
           <li
@@ -30,7 +43,6 @@ const Sidebar = ({ channels, friends, onSelect, onFindFriends, view }) => {
           </li>
         ))}
       </ul>
-
       <Button
         variant="dark"
         onClick={onFindFriends}
