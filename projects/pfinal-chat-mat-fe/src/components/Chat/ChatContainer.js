@@ -14,6 +14,7 @@ const ChatContainer = ({
   onPromoteToAdmin,
   onAddGuestMember,
   onChangeChannelName,
+  onDeleteChannel,
 }) => {
   const [message, setMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -84,6 +85,15 @@ const ChatContainer = ({
               >
                 {channelName}
               </span>
+            )}
+            {isOwner && (
+              <Button
+                variant="danger"
+                className="ml-3"
+                onClick={onDeleteChannel}
+              >
+                Delete
+              </Button>
             )}
           </h2>
         </Col>

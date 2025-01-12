@@ -116,6 +116,24 @@ const Home = () => {
     setView(views.CHANNELS);
   };
 
+  const handleDeleteChannel = async () => {
+    try {
+      if (!selectedChannelId) {
+        return;
+      }
+
+      await channelService.deleteChannel(selectedChannelId, user.id);
+      setChannels((prevChannels) =>
+        prevChannels.filter((channel) => channel.id !== selectedChannelId)
+      );
+      setSelectedChannelId(null);
+      setMessages([]);
+      setChannelMembers([]);
+    } catch (error) {
+      console.error("Error deleting channel:", error);
+    }
+  };
+
   useEffect(() => {
     if (selectedChannelId) {
       const interval = setInterval(async () => {
@@ -161,6 +179,7 @@ const Home = () => {
             messages={messages}
             friends={friends}
             onSendMessage={handleSendMessage}
+            onDeleteChannel={handleDeleteChannel}
           />
         ) : (
           <UsersContainer friends={friends} />

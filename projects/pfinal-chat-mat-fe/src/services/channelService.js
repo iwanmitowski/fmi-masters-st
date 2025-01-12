@@ -111,3 +111,14 @@ export async function createChannel(userId, channelName) {
     throw error;
   }
 }
+
+export async function deleteChannel(channelId, userId) {
+  try {
+    await axios.delete(`${baseUrl}/channels/${channelId}`, {
+      params: { userId },
+    });
+  } catch (error) {
+    console.error("Error deleting channel:", error);
+    throw error;
+  }
+}
