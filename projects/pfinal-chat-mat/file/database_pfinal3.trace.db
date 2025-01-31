@@ -386,3 +386,12 @@ org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
 	at java.base/java.lang.Thread.run(Thread.java:1575)
+2025-01-12 10:54:59.423398+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "delete from [*]FROM CHANNEL_MEMBERSHIPS where channel_id in (11, 12, 13, 14)"; expected "identifier"; SQL statement:
+delete from FROM CHANNEL_MEMBERSHIPS where channel_id in (11, 12, 13, 14) [42001-232]
+2025-01-12 10:56:12.801412+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "DELETE [*]*  FROM CHANNEL_MEMBERSHIPS DELETE FROM CHANNELS  WHERE id IN (10)"; expected "identifier"; SQL statement:
+DELETE *  FROM CHANNEL_MEMBERSHIPS DELETE FROM CHANNELS  WHERE id IN (10) [42001-232]
+2025-01-12 10:56:18.905359+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "DELETE [*]*  FROM CHANNEL_MEMBERSHIPS WHERE id IN (10)"; expected "identifier"; SQL statement:
+DELETE *  FROM CHANNEL_MEMBERSHIPS WHERE id IN (10) [42001-232]

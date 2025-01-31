@@ -92,6 +92,24 @@ const Home = () => {
     }
   };
 
+  const handleAddFriend = async (friendId) => {
+    try {
+      await userService.addFriend(user.id, friendId);
+
+      const updatedUsers = await userService.getUsers();
+      const currentUser = updatedUsers.find((u) => u.id === user.id);
+
+      if (currentUser) {
+        setFriends(currentUser.friendshipsInitiatedUsers);
+      }
+
+      const updatedChannels = await channelService.getChannels(user.id);
+      setChannels(updatedChannels);
+    } catch (error) {
+      console.error("Error adding friend:", error);
+    }
+  };
+
   const handleCreateChannel = async () => {
     try {
       const newChannel = await channelService.createChannel(
@@ -116,6 +134,29 @@ const Home = () => {
     setView(views.CHANNELS);
   };
 
+  const handleAddGuestMember = async (guestId) => {
+    try {
+      if (!selectedChannelId) {
+        return;
+      }
+
+      const guestUser = friends.find((friend) => friend.id === guestId);
+      if (!guestUser) {
+        console.error("Guest not found among friends");
+        return;
+      }
+
+      await channelService.addGuest(selectedChannelId, user.id, guestUser.id);
+
+      const updatedMembers = await channelService.getChannelMembers(
+        selectedChannelId
+      );
+      setChannelMembers(updatedMembers);
+    } catch (error) {
+      console.error("Error adding guest member:", error);
+    }
+  };
+
   const handleDeleteChannel = async () => {
     try {
       if (!selectedChannelId) {
@@ -131,6 +172,64 @@ const Home = () => {
       setChannelMembers([]);
     } catch (error) {
       console.error("Error deleting channel:", error);
+    }
+  };
+
+  const handlePromoteToAdmin = async (guestId) => {
+    try {
+      if (!selectedChannelId) {
+        return;
+      }
+
+      await channelService.promoteToAdmin(selectedChannelId, user.id, guestId);
+
+      setChannelMembers((prevMembers) =>
+        prevMembers.map((member) =>
+          member.id === guestId
+            ? { ...member, role: { id: roles.ADMIN, roleName: "ADMIN" } }
+            : member
+        )
+      );
+    } catch (error) {
+      console.error("Unexpected error:", error);
+    }
+  };
+
+  const handleRemoveGuest = async (guestId) => {
+    try {
+      if (!selectedChannelId) {
+        return;
+      }
+
+      await channelService.removeGuest(selectedChannelId, user.id, guestId);
+
+      setChannelMembers((prevMembers) =>
+        prevMembers.filter((member) => member.id !== guestId)
+      );
+    } catch (error) {
+      console.error("Unexpected error:", error);
+    }
+  };
+
+  const handleChangeChannelName = async (newName) => {
+    try {
+      if (!selectedChannelId) {
+        return;
+      }
+
+      await channelService.changeChannelName(
+        selectedChannelId,
+        user.id,
+        newName
+      );
+
+      setChannels((prevChannels) =>
+        prevChannels.map((ch) =>
+          ch.id === selectedChannelId ? { ...ch, name: newName } : ch
+        )
+      );
+    } catch (error) {
+      console.error("Error changing channel name:", error);
     }
   };
 
@@ -178,11 +277,15 @@ const Home = () => {
             )}
             messages={messages}
             friends={friends}
+            onChangeChannelName={handleChangeChannelName}
+            onPromoteToAdmin={handlePromoteToAdmin}
+            onRemoveGuest={handleRemoveGuest}
+            onAddGuestMember={handleAddGuestMember}
             onSendMessage={handleSendMessage}
             onDeleteChannel={handleDeleteChannel}
           />
         ) : (
-          <UsersContainer friends={friends} />
+          <UsersContainer friends={friends} onAddFriend={handleAddFriend} />
         )}
       </Col>
 

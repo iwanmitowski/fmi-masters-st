@@ -14,7 +14,7 @@ const UsersContainer = ({ friends, onAddFriend }) => {
 
         const filteredUsers = response.filter(
           (u) =>
-            !friends.some((friend) => friend.id === u.id) && !u.id === user.id
+            !friends.some((friend) => friend.id === u.id) || !u.id === user.id
         );
 
         setUsers(filteredUsers);
